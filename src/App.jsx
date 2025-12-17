@@ -83,7 +83,7 @@ const CourseGrid = styled.div`
 `;
 
 const CourseCard = styled.div`
-  background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; position: relative;
+  background: #c2bebeff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; position: relative;
   transition: 0.3s; &:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateY(-5px); }
   .rating-badge { position: absolute; top: 15px; right: 15px; background: #fff8ef; color: #ff9f00; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px; }
   .title { font-size: 22px; color: #007bff; font-weight: 700; margin: 4px 0 12px 0; }
@@ -104,7 +104,7 @@ const TrainingSlider = styled.div`
 const TrainingCard = styled.div`
   min-width: 300px; 
   flex-shrink: 0; /* Prevents squishing */
-  background: #fff; 
+  background: #c0c0c0ff; 
   border: 1px solid #f0f0f0; 
   border-radius: 12px; 
   padding: 16px;
@@ -157,8 +157,8 @@ const MarqueeTrack = styled.div`
 `;
 
 const LearnerCard = styled.div`
-  flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #fff; border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #f3f3f3;
+  flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #b6b6b6ff; border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(177, 177, 177, 0.87); text-align: center; border: 1px solid #f3f3f3;
   img.profile { width: 130px; height: 130px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
   .name { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
   img.placed-logo { height: 22px; max-width: 100px; object-fit: contain; margin: 0 auto; display: block; }
@@ -178,7 +178,7 @@ const FloatingLogo = styled.div`
   position: absolute; 
   width: ${props => props.size || '140px'}; 
   height: ${props => props.size || '140px'};
-  background: #fff; 
+  background: #edededff; 
   border-radius: 50%; 
   box-shadow: 0 8px 30px rgba(0,0,0,0.06); 
   display: flex; 
