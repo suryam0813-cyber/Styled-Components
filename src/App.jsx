@@ -151,9 +151,17 @@ const MarqueeWrapper = styled.div`
 `;
 
 const MarqueeTrack = styled.div`
-  display: flex; width: max-content; 
+  display: flex; 
+  width: max-content; 
+  align-items: center; /* Vertical alignment fix */
   animation: ${props => (props.reverse ? scrollRight : scrollLeft)} ${props => props.speed || '40s'} linear infinite;
+  
   &:hover { animation-play-state: paused; }
+
+  @media (max-width: 768px) {
+    /* Ensures items don't compress smaller than 33.33% */
+    flex-shrink: 0; 
+  }
 `;
 
 const LearnerCard = styled.div`
@@ -164,7 +172,19 @@ const LearnerCard = styled.div`
   img.placed-logo { height: 22px; max-width: 100px; object-fit: contain; margin: 0 auto; display: block; }
 `;
 
-const CompanyLogo = styled.img` height: 40px; margin: 0 55px; object-fit: contain; `;
+const CompanyLogo = styled.img`
+  height: 40px; 
+  margin: 0 55px; 
+  object-fit: contain;
+
+  /* Media query for mobile browsers */
+  @media (max-width: 768px) {
+    height: 30px;
+    margin: 0; /* Remove large margins to control count by width */
+    width: 33.33%; /* Exactly 3 logos fit in 100% width */
+    padding: 0 15px; /* Add internal spacing instead of margins */
+  }
+`;
 
 const FloatingSectionContainer = styled.div`
   position: relative; 
