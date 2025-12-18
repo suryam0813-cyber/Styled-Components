@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     overflow-x: hidden; 
     width: 100%;
-    background-color: #f4f4f5ff; /* Uniform light gray background */
+    background-color: #ffffffff; /* Uniform light gray background */
   }
 
   * { 
