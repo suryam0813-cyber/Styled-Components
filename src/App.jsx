@@ -33,7 +33,8 @@ const CourseCard = styled.div`
 const TrainingSlider = styled.div` display: flex; gap: 20px; overflow-x: auto; padding: 20px 20px; margin-bottom: 60px; &::-webkit-scrollbar { display: none; } `;
 const TrainingCard = styled.div`
   min-width: 300px; flex-shrink: 0; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; 
-  .img-box { width: 100%; height: 140px; background: #f8f9fa; border-radius: 8px; margin-bottom: 16px; }
+  .img-box { width: 100%; height: 140px; background: #f8f9fa; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .img-box img { width: 100%; height: 100%; object-fit: cover; }
   .train-title { font-size: 16px; font-weight: 700; margin: 8px 0; height: 44px; }
   .price-row { display: flex; align-items: center; gap: 10px; }
   .curr-price { font-weight: 700; color: #333; font-size: 18px; }
@@ -78,7 +79,13 @@ const FloatingLogo = styled.div`
 const FAQSection = styled.div` max-width: 1200px; margin: 80px auto; padding: 0 20px; `;
 const FAQHeaderRow = styled.div` display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; `;
 const FAQHeading = styled.h2` text-align: left; font-size: 32px; font-weight: 700; margin: 0; `;
-const HeaderNavButtons = styled.div` display: flex; gap: 12px; `;
+const HeaderNavButtons = styled.div` 
+  display: flex; 
+  gap: 12px; 
+  @media (max-width: 768px) {
+    display: none; // Hides buttons on mobile
+  }
+`;
 const NavButton = styled.button`
   background: #000; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
@@ -150,12 +157,10 @@ function App() {
     { q: "What if I miss a live class?", a: "You can watch the recording and ask doubts in the next session." },
     { q: "Is there a community group?", a: "Yes, you will join a batch-specific community for networking." }
   ]
-
   };
 
   const tabs = Object.keys(faqData);
 
-  // Tab switching logic for navigation buttons
   const navigateTab = (direction) => {
     const currentIndex = tabs.indexOf(activeTab);
     let newIndex;
@@ -168,7 +173,6 @@ function App() {
     setOpenFAQ(null);
   };
 
-  // Auto-scroll logic for active tab
   useEffect(() => {
     if (tabsRef.current) {
       const activeTabElement = tabsRef.current.querySelector('[data-active="true"]');
@@ -191,7 +195,6 @@ function App() {
     { n: "Karan", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
     { n: "Priya", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
     { n: "Vikram", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }
-
   ];
 
   const companies = ["https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"];
@@ -206,8 +209,15 @@ function App() {
     { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "60%", r: "35s", d: "-8s", sz: "150px" },
     { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "75%", r: "30s", d: "-20s", sz: "140px" },
     { n: "Apple", s: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", t: "50%", r: "40s", d: "-15s", sz: "130px" },
-    { n: "Intel", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY10KWvt29PS7f6vybwxQiZaFaAlDIu0qIow&s", t: "80%", r: "27s", d: "-18s", sz: "150px" },
+    { n: "Intel", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY10KWvt29PS7f6vybwxQiZaFaAlDIu0qIow&s", t: "80%", r: "27s", d: "-18s", sz: "150px" }
+  ];
 
+  // Updated training data with relevant photos
+  const trainingData = [
+    { name: "Python", photo: "https://media.licdn.com/dms/image/v2/D4E12AQHbXyUqtiN8zg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1713707414962?e=2147483647&v=beta&t=cN36zZ_g1G9tUUrfYKu802DcMk8UUmZ2ifXMK0uFuSs" },
+    { name: "Excel", photo: "https://cdn.extendoffice.com/images/stories/shot-kutools-excel/kte-ai/shot-chatgpt-for-excel-1.png" },
+    { name: "Web Dev", photo: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=400" },
+    { name: "Marketing", photo: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&q=80&w=400" }
   ];
 
   return (
@@ -231,10 +241,12 @@ function App() {
         </ContentWrapper>
 
         <TrainingSlider>
-          {["Python", "Excel", "Web Dev", "Marketing"].map((name, i) => (
+          {trainingData.map((item, i) => (
             <TrainingCard key={i}>
-              <div className="img-box" />
-              <div className="train-title">Programming in {name} with AI</div>
+              <div className="img-box">
+                <img src={item.photo} alt={`Programming in ${item.name} with AI`} />
+              </div>
+              <div className="train-title">Programming in {item.name} with AI</div>
               <div className="price-row"><span className="curr-price">₹999</span><span className="old-price">₹4,499</span></div>
             </TrainingCard>
           ))}
