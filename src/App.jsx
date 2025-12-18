@@ -269,10 +269,10 @@ function App() {
     "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png",
     "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
     "https://www.freepnglogos.com/uploads/apple-logo-png/apple-logo-png-transparent-pngpix-14.png",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYVfXnPTb-PVPHpI4dTm05ChjA2PpREbfqkQ&s",
-    "https://media.licdn.com/dms/image/sync/v2/D4D27AQHrCe9sOv-HIg/articleshare-shrink_800/articleshare-shrink_800/0/1713336583779?e=2147483647&v=beta&t=ztQ-FzNSTv0y6C6lTfHtsTXtCjyPFcCDy91ciYo-9CY",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Corporate_logo.svg/2560px-Adobe_Corporate_logo.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png",
     "https://static.vecteezy.com/system/resources/thumbnails/018/930/745/small/twitter-logo-twitter-icon-transparent-free-free-png.png",
-    "https://upload.wikimedia.org/wikipedia/commons/f/fa/LinkedIn_logo_initials.png"
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/1200px-LinkedIn_Logo.svg.png"
   ];
 
   return (
