@@ -95,13 +95,54 @@ const CompanyLogo = styled.img` height: 40px; margin: 0 55px; object-fit: contai
 
 const FloatingSectionContainer = styled.div` position: relative; width: 100%; height: 650px; overflow: hidden; margin-top: 50px; text-align: center; `;
 const FloatingLogo = styled.div`
-  position: absolute; width: ${props => props.size || '140px'}; height: ${props => props.size || '140px'};
-  background: #fff; border-radius: 50%; box-shadow: 0 8px 30px rgba(0,0,0,0.06); display: flex; justify-content: center; align-items: center; z-index: 1; top: ${props => props.top};
-  animation: ${rollAnimation} ${props => props.rollDuration || '25s'} linear infinite, ${float} ${props => props.floatDuration || '6s'} ease-in-out infinite;
-  animation-delay: ${props => props.delay || '0s'}; cursor: pointer;
+  position: absolute;
+  /* Dynamic sizing based on props */
+  width: ${props => props.size || '140px'};
+  height: ${props => props.size || '140px'};
+  
+  /* Shrink logos on mobile to prevent lane crowding */
+  @media (max-width: 768px) {
+    width: calc(${props => props.size || '140px'} * 0.65);
+    height: calc(${props => props.size || '140px'} * 0.65);
+  }
+
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  top: ${props => props.top};
+  
+  /* Combined animations for horizontal rolling and vertical floating */
+  animation: ${rollAnimation} ${props => props.rollDuration || '25s'} linear infinite, 
+             ${float} ${props => props.floatDuration || '6s'} ease-in-out infinite;
+  animation-delay: ${props => props.delay || '0s'};
+  cursor: pointer;
+
   img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
-  .name-label { position: absolute; bottom: -45px; background: #000; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 14px; opacity: 0; transition: 0.3s; white-space: nowrap; }
-  &:hover { animation-play-state: paused; z-index: 100; transform: scale(1.1); .name-label { opacity: 1; bottom: -50px; } }
+  
+  .name-label {
+    position: absolute;
+    bottom: -45px;
+    background: #000;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: 0.3s;
+    white-space: nowrap;
+    @media (max-width: 768px) { font-size: 11px; padding: 4px 10px; }
+  }
+
+  &:hover {
+    animation-play-state: paused;
+    z-index: 100;
+    transform: scale(1.1);
+    .name-label { opacity: 1; bottom: -50px; }
+  }
 `;
 
 const FAQSection = styled.div` max-width: 1200px; margin: 80px auto; padding: 0 20px; `;
@@ -274,15 +315,27 @@ function App() {
         <FloatingSectionContainer>
           <SectionHeader>Every 3rd software engineer in India is on HireNext</SectionHeader>
           {[
-            { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "10%", r: "32s", d: "-2s", sz: "120px" },
-            { n: "Microsoft", s: "https://pngimg.com/uploads/microsoft/microsoft_PNG22.png", t: "30%", r: "28s", d: "0s", sz: "140px" },
-            { n: "Uber", s: "https://pngimg.com/uploads/uber/uber_PNG24.png", t: "50%", r: "30s", d: "1s", sz: "130px" },
-            { n: "Flipkart", s: "https://cdn.freebiesupply.com/logos/large/2x/flipkart-logo-png-transparent.png", t: "70%", r: "26s", d: "-1s", sz: "150px" },
-            { n: "Netflix", s: "https://pngimg.com/uploads/netflix/netflix_PNG15.png", t: "40%", r: "34s", d: "2s", sz: "120px" },
-            { n: "Apple", s: "https://1000logos.net/wp-content/uploads/2016/10/Apple-Logo.png", t: "60%", r: "29s", d: "-2s", sz: "140px" },
-            { n: "Amazon", s: "https://pngimg.com/uploads/amazon/amazon_PNG11.png", t: "20%", r: "31s", d: "1s", sz: "130px" },
-            { n: "LinkedIn", s: "https://pngimg.com/uploads/linkedIn/linkedIn_PNG19.png", t: "80%", r: "27s", d: "0s", sz: "150px" } ,
-
+         // Lane 1: Top
+  { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "5%", r: "32s", d: "-2s", sz: "120px" },
+  
+  // Lane 2
+  { n: "Amazon", s: "https://pngimg.com/uploads/amazon/amazon_PNG11.png", t: "20%", r: "31s", d: "1s", sz: "130px" },
+  
+  // Lane 3: Upper Middle
+  { n: "Microsoft", s: "https://pngimg.com/uploads/microsoft/microsoft_PNG22.png", t: "35%", r: "28s", d: "0s", sz: "140px" },
+  
+  // Lane 4: Middle
+  { n: "Uber", s: "https://pngimg.com/uploads/uber/uber_PNG24.png", t: "50%", r: "30s", d: "1s", sz: "130px" },
+  
+  // Lane 5: Lower Middle
+  { n: "Apple", s: "https://1000logos.net/wp-content/uploads/2016/10/Apple-Logo.png", t: "65%", r: "29s", d: "-2s", sz: "140px" },
+  
+  // Lane 6: Bottom
+  { n: "Flipkart", s: "https://cdn.freebiesupply.com/logos/large/2x/flipkart-logo-png-transparent.png", t: "80%", r: "26s", d: "-1s", sz: "150px" },
+  
+  // Staggered extras (placed in vertical gaps)
+  { n: "Netflix", s: "https://pngimg.com/uploads/netflix/netflix_PNG15.png", t: "12%", r: "34s", d: "2s", sz: "120px" },
+  { n: "LinkedIn", s: "https://pngimg.com/uploads/linkedIn/linkedIn_PNG19.png", t: "72%", r: "27s", d: "0s", sz: "150px" }
 
           
           ].map((logo, i) => (
