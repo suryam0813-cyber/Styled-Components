@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     overflow-x: hidden; 
     width: 100%;
-    background-color: #f8f9fa; /* Uniform light gray background */
+    background-color: #f4f4f5ff; /* Uniform light gray background */
   }
 
   * { 
@@ -83,12 +83,11 @@ const CourseGrid = styled.div`
 `;
 
 const CourseCard = styled.div`
-  background: #c2bebeff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; position: relative;
-  transition: 0.3s; &:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateY(-5px); }
-  .rating-badge { position: absolute; top: 15px; right: 15px; background: #fff8ef; color: #ff9f00; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px; }
-  .title { font-size: 22px; color: #007bff; font-weight: 700; margin: 4px 0 12px 0; }
-  .info-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #444; margin-bottom: 12px; }
-  .btn-know { width: 100%; margin-top: 20px; background: #007bff; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  background: #ffffff; /* Sets card background to white */
+  border: 1px solid #fffdfdff; 
+  border-radius: 16px; 
+  padding: 24px;
+  /* ... rest of your styles ... */
 `;
 
 const TrainingSlider = styled.div`
@@ -104,8 +103,8 @@ const TrainingSlider = styled.div`
 const TrainingCard = styled.div`
   min-width: 300px; 
   flex-shrink: 0; /* Prevents squishing */
-  background: #c0c0c0ff; 
-  border: 1px solid #f0f0f0; 
+  background: #f6f6f6ff; 
+  border: 1px solid #e5e4e4ff; 
   border-radius: 12px; 
   padding: 16px;
   scroll-snap-align: start;
@@ -113,8 +112,8 @@ const TrainingCard = styled.div`
   .img-box { width: 100%; height: 140px; background: #f8f9fa; border-radius: 8px; margin-bottom: 16px; }
   .train-title { font-size: 16px; font-weight: 700; margin: 8px 0; height: 44px; }
   .price-row { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
-  .curr-price { font-weight: 700; color: #333; font-size: 18px; }
-  .old-price { text-decoration: line-through; color: #aaa; font-size: 14px; }
+  .curr-price { font-weight: 700; color: #272727ff; font-size: 18px; }
+  .old-price { text-decoration: line-through; color: #dddadaff; font-size: 14px; }
 `;
 
 const MarqueeWrapper = styled.div`
@@ -165,7 +164,7 @@ const MarqueeTrack = styled.div`
 `;
 
 const LearnerCard = styled.div`
-  flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #b6b6b6ff; border-radius: 12px;
+  flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #fafafaff; border-radius: 12px;
   box-shadow: 0 10px 30px rgba(177, 177, 177, 0.87); text-align: center; border: 1px solid #f3f3f3;
   img.profile { width: 130px; height: 130px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
   .name { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
@@ -192,13 +191,15 @@ const FloatingSectionContainer = styled.div`
   height: 650px; 
   overflow: hidden; 
   margin-top: 50px;
+  text-align: center;
+  padding: 0 20px;
 `;
 
 const FloatingLogo = styled.div`
   position: absolute; 
   width: ${props => props.size || '140px'}; 
   height: ${props => props.size || '140px'};
-  background: #edededff; 
+  background: #f3f2f2ff; 
   border-radius: 50%; 
   box-shadow: 0 8px 30px rgba(0,0,0,0.06); 
   display: flex; 
@@ -216,7 +217,7 @@ const FloatingLogo = styled.div`
   img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
   
   .name-label { 
-    position: absolute; bottom: -45px; background: #222; color: #fff; 
+    position: absolute; bottom: -45px; background: #000000ff; color: #ffffffff; 
     padding: 6px 14px; border-radius: 8px; font-size: 14px; 
     opacity: 0; transition: 0.3s; white-space: nowrap; 
   }
@@ -342,7 +343,7 @@ function App() {
 
         <ContentWrapper>
           <SectionHeader margin="80px 0 10px 0">Top Companies Hiring On HireNext</SectionHeader>
-          <CenteredSubHeader>Every 3rd software engineer in india is on HireNext</CenteredSubHeader>
+          <CenteredSubHeader></CenteredSubHeader>
         </ContentWrapper>
         
         <MarqueeWrapper fade>
@@ -354,6 +355,7 @@ function App() {
         </MarqueeWrapper>
 
         <FloatingSectionContainer>
+          <h1>Every 3rd software engineer in india is on HireNext</h1>
           {[
   { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "5%", r: "22s", d: "-2s", sz: "140px", fd: "5s" },
   { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "12%", r: "35s", d: "-5s", sz: "110px", fd: "7s" },
