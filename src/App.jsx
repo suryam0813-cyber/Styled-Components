@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled, { keyframes, createGlobalStyle } from 'styled-components';
 import { Plus, Minus, Star, Clock, Briefcase, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -20,7 +20,6 @@ const MainContainer = styled.div` width: 100%; margin: 40px 0; `;
 const ContentWrapper = styled.div` max-width: 1200px; margin: 0 auto; padding: 0 20px; `;
 const SectionHeader = styled.h2` text-align: center; font-size: 42px; margin: 40px 0 30px 0; font-weight: 800; `;
 
-// Course Grid Section
 const CourseGrid = styled.div` display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px; `;
 const CourseCard = styled.div`
   background: #ffffff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; position: relative; transition: 0.3s;
@@ -31,7 +30,6 @@ const CourseCard = styled.div`
   .btn-know { width: 100%; margin-top: 20px; background: #007bff; color: #fff; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 `;
 
-// Training Slider Section
 const TrainingSlider = styled.div` display: flex; gap: 20px; overflow-x: auto; padding: 20px 20px; margin-bottom: 60px; &::-webkit-scrollbar { display: none; } `;
 const TrainingCard = styled.div`
   min-width: 300px; flex-shrink: 0; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; 
@@ -42,7 +40,6 @@ const TrainingCard = styled.div`
   .old-price { text-decoration: line-through; color: #aaa; font-size: 14px; }
 `;
 
-// Student Section
 const StudentSection = styled.section` width: 100%; background-color: #f1f3f5; padding: 60px 0; margin: 50px 0; `;
 const LearnerCard = styled.div`
   flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); text-align: center;
@@ -51,7 +48,6 @@ const LearnerCard = styled.div`
   img.placed-logo { height: 22px; max-width: 100px; object-fit: contain; margin: 0 auto; display: block; }
 `;
 
-// Marquee / Company Slider
 const MarqueeWrapper = styled.div` 
   width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; 
   ${props => props.fade && `
@@ -64,12 +60,9 @@ const MarqueeWrapper = styled.div`
   `}
 `;
 const MarqueeTrack = styled.div` display: flex; width: max-content; align-items: center; animation: ${props => (props.reverse ? scrollRight : scrollLeft)} ${props => props.speed || '40s'} linear infinite; &:hover { animation-play-state: paused; } `;
-const CompanyLogo = styled.img`
-  height: 40px; margin: 0 55px; object-fit: contain;
-  @media (max-width: 768px) { width: 33.33%; margin: 0; padding: 0 15px; }
-`;
 
-// Floating Logo Section
+const CompanyLogo = styled.img` height: 40px; margin: 0 55px; object-fit: contain; @media (max-width: 768px) { width: 33.33%; margin: 0; padding: 0 15px; } `;
+
 const FloatingSectionContainer = styled.div` position: relative; width: 100%; height: 650px; overflow: hidden; margin-top: 50px; text-align: center; `;
 const FloatingLogo = styled.div`
   position: absolute; width: ${props => props.size || '140px'}; height: ${props => props.size || '140px'};
@@ -82,10 +75,16 @@ const FloatingLogo = styled.div`
   &:hover { animation-play-state: paused; z-index: 100; transform: scale(1.1); .name-label { opacity: 1; bottom: -50px; } }
 `;
 
-// FAQ Section
 const FAQSection = styled.div` max-width: 1200px; margin: 80px auto; padding: 0 20px; `;
-const NavTabsWrapper = styled.div` position: relative; display: flex; align-items: center; margin: 30px 0; `;
-const NavButton = styled.button` background: #fff; border: 1px solid #eee; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 15; position: absolute; ${props => props.direction === 'left' ? 'left: -20px;' : 'right: -20px;'} box-shadow: 0 2px 8px rgba(0,0,0,0.1); `;
+const FAQHeaderRow = styled.div` display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; `;
+const FAQHeading = styled.h2` text-align: left; font-size: 32px; font-weight: 700; margin: 0; `;
+const HeaderNavButtons = styled.div` display: flex; gap: 12px; `;
+const NavButton = styled.button`
+  background: #000; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
+  &:hover { background: #333; }
+`;
+
 const FAQTabs = styled.div` display: flex; gap: 20px; border-bottom: 1px solid #eee; overflow-x: auto; scroll-behavior: smooth; width: 100%; &::-webkit-scrollbar { display: none; } `;
 const Tab = styled.div` padding: 12px 15px; font-weight: 600; font-size: 14px; cursor: pointer; white-space: nowrap; color: ${props => props.active ? '#007bff' : '#666'}; border-bottom: 3px solid ${props => props.active ? '#007bff' : 'transparent'}; transition: 0.3s; `;
 const AccordionItem = styled.div` border-bottom: 1px solid #f1f3f5; `;
@@ -96,47 +95,6 @@ function App() {
   const [openFAQ, setOpenFAQ] = useState(null);
   const [activeTab, setActiveTab] = useState('Eligibility & Application');
   const tabsRef = useRef(null);
-
-  const learners = [
-    { n: "Shriyansh Sahu", p: "https://i.pravatar.cc/150?u=1", c: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" },
-    { n: "Meghana", p: "https://i.pravatar.cc/150?u=2", c: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" },
-    { n: "Abhishek", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-    { n: "Taksheel", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=5", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-    { n: "Rahul", p: "https://i.pravatar.cc/150?u=7", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-    { n: "Yashwant", p: "https://i.pravatar.cc/150?u=10", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-  ];
-
-  const companies = ["https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"];
-
-  // Floating logo data distributed to prevent overlapping
-  const floatingLogos = 
-  [
-  // Lane 1 (Top)
-  { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "5%", r: "32s", d: "-2s", sz: "120px" },
-  { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "12%", r: "20s", d: "-14s", sz: "150px" },
-  
-  // Lane 2 (Upper Middle)
-  { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png", t: "22%", r: "52s", d: "-5s", sz: "140px" },
-  { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "30%", r: "22s", d: "-25s", sz: "130px" },
-  
-  // Lane 3 (Middle)
-  { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "38%", r: "40s", d: "-8s", sz: "110px" },
-  { n: "PhonePe", s: "https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png", t: "46%", r: "28s", d: "-18s", sz: "100px" },
-  
-  // Lane 4 (Lower Middle)
-  { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "55%", r: "42s", d: "-12s", sz: "130px" },
-  { n: "hp", s: "https://download.logo.wine/logo/Hewlett-Packard/Hewlett-Packard-Logo.wine.png", t: "62%", r: "32s", d: "-28s", sz: "190px" },
-  
-  // Lane 5 (Bottom)
-  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "72%", r: "16s", d: "-10s", sz: "160px" },
-  { n: "Apple", s: "https://img.icons8.com/ios_filled/1200/mac-os.png", t: "82%", r: "35s", d: "-20s", sz: "90px" },
-  
-  // Large Background Elements (Placed in gaps)
-  { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG3.png", t: "15%", r: "21s", d: "-30s", sz: "280px" },
-  { n: "Dell", s: "https://www.pngplay.com/wp-content/uploads/7/Dell-Transparent-File.png", t: "68%", r: "20s", d: "-35s", sz: "230px" },
-  { n: "Coca Cola", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png", t: "40%", r: "36s", d: "-1s", sz: "180px" }
-]
 
   const faqData = {
     'Eligibility & Application': [
@@ -195,6 +153,63 @@ function App() {
 
   };
 
+  const tabs = Object.keys(faqData);
+
+  // Tab switching logic for navigation buttons
+  const navigateTab = (direction) => {
+    const currentIndex = tabs.indexOf(activeTab);
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % tabs.length;
+    } else {
+      newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    }
+    setActiveTab(tabs[newIndex]);
+    setOpenFAQ(null);
+  };
+
+  // Auto-scroll logic for active tab
+  useEffect(() => {
+    if (tabsRef.current) {
+      const activeTabElement = tabsRef.current.querySelector('[data-active="true"]');
+      if (activeTabElement) {
+        activeTabElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeTab]);
+
+  const learners = [
+    { n: "Shriyansh Sahu", p: "https://i.pravatar.cc/150?u=1", c: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" },
+    { n: "Meghana", p: "https://i.pravatar.cc/150?u=2", c: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" },
+    { n: "Abhishek", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Taksheel", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=5", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Rahul", p: "https://i.pravatar.cc/150?u=7", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Yashwant", p: "https://i.pravatar.cc/150?u=10", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Ankita", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Sonal", p: "https://i.pravatar.cc/150?u=13", c: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" },
+    { n: "Karan", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Priya", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Vikram", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }
+
+  ];
+
+  const companies = ["https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"];
+
+  const floatingLogos = [
+    { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "5%", r: "32s", d: "-2s", sz: "120px" },
+    { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "12%", r: "20s", d: "-14s", sz: "150px" },
+    { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png", t: "22%", r: "52s", d: "-5s", sz: "140px" },
+    { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "30%", r: "22s", d: "-25s", sz: "130px" },
+    { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG3.png", t: "15%", r: "21s", d: "-30s", sz: "280px" },
+    { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "40%", r: "28s", d: "-12s", sz: "160px" },
+    { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "60%", r: "35s", d: "-8s", sz: "150px" },
+    { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "75%", r: "30s", d: "-20s", sz: "140px" },
+    { n: "Apple", s: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", t: "50%", r: "40s", d: "-15s", sz: "130px" },
+    { n: "Intel", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY10KWvt29PS7f6vybwxQiZaFaAlDIu0qIow&s", t: "80%", r: "27s", d: "-18s", sz: "150px" },
+
+  ];
+
   return (
     <>
       <GlobalStyles />
@@ -226,18 +241,18 @@ function App() {
         </TrainingSlider>
 
         <StudentSection>
-          <ContentWrapper><SectionHeader align="left">Our learners got placed. So can you!</SectionHeader></ContentWrapper>
+          <ContentWrapper><SectionHeader style={{textAlign: 'left'}}>Our learners got placed. So can you!</SectionHeader></ContentWrapper>
           <MarqueeWrapper>
             <MarqueeTrack speed="30s">
               {[...learners, ...learners].map((l, i) => (
-                <LearnerCard key={`r1-${i}`}><img src={l.p} className="profile"/><div className="name">{l.n}</div><img src={l.c} className="placed-logo"/></LearnerCard>
+                <LearnerCard key={`r1-${i}`}><img src={l.p} className="profile" alt={l.n}/><div className="name">{l.n}</div><img src={l.c} className="placed-logo" alt="logo"/></LearnerCard>
               ))}
             </MarqueeTrack>
           </MarqueeWrapper>
           <MarqueeWrapper>
             <MarqueeTrack speed="35s" reverse>
               {[...learners, ...learners].map((l, i) => (
-                <LearnerCard key={`r2-${i}`}><img src={l.p} className="profile"/><div className="name">{l.n}</div><img src={l.c} className="placed-logo"/></LearnerCard>
+                <LearnerCard key={`r2-${i}`}><img src={l.p} className="profile" alt={l.n}/><div className="name">{l.n}</div><img src={l.c} className="placed-logo" alt="logo"/></LearnerCard>
               ))}
             </MarqueeTrack>
           </MarqueeWrapper>
@@ -249,7 +264,7 @@ function App() {
         </MarqueeTrack></MarqueeWrapper>
 
         <FloatingSectionContainer>
-          <h1>Every 3rd software engineer in India is on HireNext</h1>
+          <h1 style={{fontSize: '42px', fontWeight: '800'}}>Every 3rd software engineer in India is on HireNext</h1>
           {floatingLogos.map((logo, i) => (
             <FloatingLogo key={i} top={logo.t} rollDuration={logo.r} delay={logo.d} size={logo.sz}>
               <img src={logo.s} alt={logo.n} /><div className="name-label">{logo.n}</div>
@@ -258,16 +273,27 @@ function App() {
         </FloatingSectionContainer>
 
         <FAQSection>
-          <SectionHeader size="32px">FAQ's</SectionHeader>
-          <NavTabsWrapper>
-            <NavButton direction="left" onClick={() => (tabsRef.current.scrollLeft -= 200)}><ChevronLeft size={20}/></NavButton>
-            <FAQTabs ref={tabsRef}>
-              {Object.keys(faqData).map(tab => (
-                <Tab key={tab} active={activeTab === tab} onClick={() => { setActiveTab(tab); setOpenFAQ(null); }}>{tab}</Tab>
-              ))}
-            </FAQTabs>
-            <NavButton direction="right" onClick={() => (tabsRef.current.scrollLeft += 200)}><ChevronRight size={20}/></NavButton>
-          </NavTabsWrapper>
+          <FAQHeaderRow>
+            <FAQHeading>FAQ's</FAQHeading>
+            <HeaderNavButtons>
+              <NavButton onClick={() => navigateTab('prev')}><ChevronLeft size={20} /></NavButton>
+              <NavButton onClick={() => navigateTab('next')}><ChevronRight size={20} /></NavButton>
+            </HeaderNavButtons>
+          </FAQHeaderRow>
+
+          <FAQTabs ref={tabsRef}>
+            {tabs.map(tab => (
+              <Tab 
+                key={tab} 
+                data-active={activeTab === tab}
+                active={activeTab === tab} 
+                onClick={() => { setActiveTab(tab); setOpenFAQ(null); }}
+              >
+                {tab}
+              </Tab>
+            ))}
+          </FAQTabs>
+
           {faqData[activeTab]?.map((item, index) => (
             <AccordionItem key={index}>
               <Question onClick={() => setOpenFAQ(openFAQ === index ? null : index)}>
