@@ -259,7 +259,7 @@ function App() {
         </StudentSection>
 
         <ContentWrapper><SectionHeader margin="80px 0 20px 0">Top Companies Hiring On HireNext</SectionHeader></ContentWrapper>
-        <MarqueeWrapper fade><MarqueeTrack speed="25s">
+        <MarqueeWrapper fade><MarqueeTrack speed="23s">
             {[...companies, ...companies].map((url, i) => (<CompanyLogo key={i} src={url} />))}
         </MarqueeTrack></MarqueeWrapper>
 
