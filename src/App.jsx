@@ -1,189 +1,149 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes, createGlobalStyle } from 'styled-components';
-import { Plus, Minus, Star, Clock, Briefcase, ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
+import { Plus, Minus, Star, Clock, Briefcase, X, Download, GraduationCap, Briefcase as JobIcon, Home, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // --- Global Styles ---
 const GlobalStyles = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-  html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; background-color: #f8f9fa; }
+  html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; background-color: #ffffff; }
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 `;
 
 // --- Animations ---
 const scrollLeft = keyframes` 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } `;
 const scrollRight = keyframes` 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } `;
-const float = keyframes` 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-45px) rotate(3deg); } `;
+const float = keyframes` 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } `;
 const rollAnimation = keyframes` 0% { left: 110%; } 100% { left: -350px; } `;
-
-// Slide Out to LEFT Animation
-const slideOutLeft = keyframes`
-  0% { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(-120%); opacity: 0; }
-`;
+const slideOutLeft = keyframes` 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-120%); opacity: 0; } `;
 
 // --- Styled Components ---
-const MainContainer = styled.div` width: 100%; margin: 40px 0; `;
+const MainContainer = styled.div` width: 100%; min-height: 100vh; padding-bottom: 120px; `;
 const ContentWrapper = styled.div` max-width: 1200px; margin: 0 auto; padding: 0 20px; `;
 
-const SectionHeader = styled.h2` 
-  text-align: center; font-size: 42px; margin: 40px 0 30px 0; font-weight: 800; line-height: 1.2;
-  @media (max-width: 768px) { font-size: 26px; margin: 20px 0 15px 0; }
+const Navbar = styled.div`
+  display: flex; justify-content: center; gap: 20px; padding: 25px 0; background: white;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;
 `;
 
-const CourseGrid = styled.div` display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px; `;
-const CourseCard = styled.div`
-  background: #ffffff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; 
-  position: relative; transition: 0.3s; overflow: hidden;
-  &:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateY(-5px); }
-  .rating-badge { position: absolute; top: 15px; right: 15px; background: #fff8ef; color: #ff9f00; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px; }
-  .title { font-size: 22px; color: #007bff; font-weight: 700; margin: 4px 0 12px 0; }
-  .info-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #444; margin-bottom: 12px; }
-  .btn-know { width: 100%; margin-top: 20px; background: #007bff; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+const NavButton = styled.button`
+  display: flex; align-items: center; gap: 10px; padding: 12px 24px;
+  background: ${props => props.active ? '#007bff' : 'white'};
+  color: ${props => props.active ? 'white' : '#333'};
+  border: 1px solid ${props => props.active ? '#007bff' : '#eee'};
+  border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600;
+  &:hover { background: #007bff; color: white; border-color: #007bff; transform: translateY(-3px); }
 `;
+
+const SectionHeader = styled.h2` text-align: center; font-size: 38px; margin: 50px 0 30px; font-weight: 800; `;
 
 const Ribbon = styled.div`
-  position: absolute; top: 0; right: 0; width: 100px; height: 100px; overflow: hidden; pointer-events: none; z-index: 5;
+  position: absolute; top: 0; right: 0; width: 110px; height: 115px; overflow: hidden; pointer-events: none; z-index: 5;
   &::before {
-    content: 'Newly launched'; position: absolute; top: 20px; right: -25px; width: 140px; background: #ff4d00;
-    color: #fff; font-size: 11px; font-weight: 700; text-align: center; line-height: 24px; transform: rotate(45deg);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-transform: capitalize;
+    content: 'Newly Launched'; position: absolute; top: 30px; right: -35px; width: 180px; background: #ff4d00;
+    color: #ffffffff; font-size: 10px; font-weight: 700; text-align: center; line-height: 22px; transform: rotate(45deg);
+    box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.1); text-transform: uppercase;
   }
 `;
 
-const TrainingSlider = styled.div` display: flex; gap: 20px; overflow-x: auto; padding: 20px 20px; margin-bottom: 60px; &::-webkit-scrollbar { display: none; } `;
-const TrainingCard = styled.div`
-  min-width: 300px; flex-shrink: 0; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px; 
-  .img-box { width: 100%; height: 140px; background: #f8f9fa; border-radius: 8px; margin-bottom: 16px; overflow: hidden; img { width: 100%; height: 100%; object-fit: cover; } }
-  .train-title { font-size: 16px; font-weight: 700; margin: 8px 0; }
-  .price-row { display: flex; align-items: center; gap: 10px; .curr-price { font-weight: 700; color: #333; font-size: 18px; } .old-price { text-decoration: line-through; color: #aaa; font-size: 14px; } }
-`;
-
-const StudentSection = styled.section` width: 100%; background-color: #f1f3f5; padding: 60px 0; margin: 50px 0; `;
-const LearnerCard = styled.div`
-  flex: 0 0 220px; margin: 10px 15px; padding: 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); text-align: center;
-  img.profile { width: 130px; height: 130px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
-  .name { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
-  img.placed-logo { height: 22px; max-width: 100px; object-fit: contain; margin: 0 auto; display: block; }
-`;
-
-const MarqueeWrapper = styled.div` 
-  width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; 
-  ${props => props.fade && `
-    &::before, &::after { content: ""; position: absolute; top: 0; width: 200px; height: 100%; z-index: 10; pointer-events: none; }
-    &::before { left: 0; background: linear-gradient(to right, #f8f9fa 15%, transparent); }
-    &::after { right: 0; background: linear-gradient(to left, #f8f9fa 15%, transparent); }
-  `}
-`;
-const MarqueeTrack = styled.div` display: flex; width: max-content; align-items: center; animation: ${props => (props.reverse ? scrollRight : scrollLeft)} ${props => props.speed || '40s'} linear infinite; &:hover { animation-play-state: paused; } `;
-const CompanyLogo = styled.img` height: 40px; margin: 0 55px; object-fit: contain; `;
-
-const FloatingSectionContainer = styled.div` position: relative; width: 100%; height: 650px; overflow: hidden; margin-top: 50px; text-align: center; `;
 const FloatingLogo = styled.div`
-  position: absolute; width: ${props => props.size || '140px'}; height: ${props => props.size || '140px'};
-  background: #fff; border-radius: 50%; box-shadow: 0 8px 30px rgba(0,0,0,0.06); display: flex; justify-content: center; align-items: center; z-index: 1; top: ${props => props.top};
-  animation: ${rollAnimation} ${props => props.rollDuration || '25s'} linear infinite, ${float} ${props => props.floatDuration || '6s'} ease-in-out infinite;
-  animation-delay: ${props => props.delay || '0s'}; cursor: pointer;
-  img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
-  /* NAME VISIBILITY ON HOVER */
-  .name-label { position: absolute; bottom: -45px; background: #000; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 14px; opacity: 0; transition: 0.3s; white-space: nowrap; z-index: 10; }
+  position: absolute; width: ${props => props.size || '150px'}; height: ${props => props.size || '150px'};
+  background: #fff; border-radius: 50%; box-shadow: 0 8px 30px rgba(0,0,0,0.06); 
+  display: flex; justify-content: center; align-items: center; top: ${props => props.top};
+  animation: ${rollAnimation} ${props => props.rollDuration || '25s'} linear infinite, ${float} 6s ease-in-out infinite;
+  img { width: 70%; object-fit: contain; }
+  .name-label { position: absolute; bottom: -45px; background: #000; color: #fff; padding: 6px 14px; border-radius: 8px; opacity: 0; transition: 0.3s; pointer-events: none; white-space: nowrap; z-index: 10; }
   &:hover { animation-play-state: paused; z-index: 100; transform: scale(1.1); .name-label { opacity: 1; bottom: -50px; } }
 `;
 
-const ImageSection = styled.div`
-  max-width: 1200px; margin: 60px auto; padding: 0 20px; text-align: center;
-  img { width: 100%; height: auto; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+// --- Marquee Without Fading (For Students) ---
+const MarqueeWrapper = styled.div`
+  width: 100vw; overflow: hidden; position: relative; margin: 20px 0;
+  left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
 `;
 
-const FAQSection = styled.div` max-width: 1200px; margin: 80px auto; padding: 0 20px; `;
-const FAQHeaderRow = styled.div` display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; `;
-const FAQHeading = styled.h2` text-align: left; font-size: 32px; font-weight: 700; margin: 0; `;
-const FAQTabs = styled.div` display: flex; gap: 20px; border-bottom: 1px solid #eee; overflow-x: auto; margin-bottom: 30px; &::-webkit-scrollbar { display: none; } `;
-const Tab = styled.div` padding: 12px 15px; font-weight: 600; font-size: 14px; cursor: pointer; white-space: nowrap; color: ${props => props.active ? '#007bff' : '#666'}; border-bottom: 3px solid ${props => props.active ? '#007bff' : 'transparent'}; transition: 0.3s; `;
-const AccordionItem = styled.div` border-bottom: 1px solid #f1f3f5; `;
-const Question = styled.div` display: flex; justify-content: space-between; align-items: center; padding: 24px 0; cursor: pointer; font-weight: 500; font-size: 16px; span { flex: 1; text-align: left; } `;
-const Answer = styled.div` padding-bottom: 24px; color: #555; font-size: 14px; line-height: 1.6; text-align: left; `;
+// --- Fading Effect strictly for Company logos ---
+const FadedMarqueeWrapper = styled(MarqueeWrapper)`
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+`;
 
-const AppDownloadNudgeWrapper = styled.div`
+const MarqueeTrack = styled.div`
+  display: flex; width: max-content; 
+  animation: ${props => props.reverse ? scrollRight : scrollLeft} ${props => props.speed || '40s'} linear infinite;
+  align-items: center;
+  &:hover { animation-play-state: paused; }
+  img.company-logo-img { height: 45px; width: auto; object-fit: contain; margin: 0 50px; }
+`;
+
+const StudentSectionWrapper = styled.div`
+  background-color: #f8f9fa; width: 100vw; padding: 60px 0; position: relative;
+  left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
+`;
+
+const LearnerCard = styled.div`
+  flex: 0 0 260px; margin: 0 15px; padding: 25px; background: #ffffff; border-radius: 20px; 
+  box-shadow: 10px 11px 10px 10px rgba(0,0,0,0.08); text-align: center;
+  img.profile { width: 110px; height: 110px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
+  .name { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
+  img.placed-logo { height: 25px; width: auto; max-width: 100px; object-fit: contain; margin: 10px auto; display: block; }
+`;
+
+// Mobile grid for 3 logos
+const CompanyMobileContainer = styled.div`
+  width: 100%;
+  display: flex;
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 0 20px;
+    img { margin: 0 auto !important; width: 80% !important; height: auto !important; }
+  }
+`;
+
+const TrainingCard = styled.div`
+  background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eee; transition: 0.3s;
+  img { width: 100%; height: 160px; object-fit: cover; }
+  .content { padding: 15px; }
+  .title { font-weight: 600; font-size: 16px; margin-bottom: 5px; }
+  .price { font-weight: 700; font-size: 18px; color: #333; display: flex; align-items: center; gap: 8px; }
+  .old-price { text-decoration: line-through; color: #999; font-size: 14px; font-weight: 400; }
+  &:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+`;
+
+const AppPopupWrapper = styled.div`
   position: fixed; bottom: 30px; right: 30px; z-index: 10000;
-  display: ${props => props.show ? 'flex' : 'none'};
-  flex-direction: column; align-items: flex-start;
-  animation: ${props => props.isClosing ? slideOutLeft : 'none'} 0.6s ease-in-out forwards;
-  @media (max-width: 768px) { right: 10px; left: 10px; bottom: 10px; }
+  display: flex; flex-direction: column; align-items: flex-start;
+  animation: ${props => props.isClosing ? slideOutLeft : 'none'} 0.6s forwards;
 `;
 
-const PinkTab = styled.div`
+const PinkPill = styled.div`
   background: #ff4d88; color: white; padding: 6px 16px; border-radius: 12px 12px 0 0;
-  font-size: 12px; font-weight: 700; margin-left: 20px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  font-size: 12px; font-weight: 700; margin-left: 20px;
 `;
 
-const NudgeStats = styled.div`
-  flex: 1; display: flex; flex-direction: column;
-  .stats-row-container { display: flex; align-items: center; gap: 20px; margin-bottom: 8px; }
-  .stat-group { display: flex; flex-direction: column; }
-  .rating, .downloads { display: flex; align-items: center; gap: 4px; font-size: 20px; font-weight: 700; color: #222; }
-  .sub-text { font-size: 12px; color: #999; font-weight: 400; }
+const MainPopupBody = styled.div`
+  background: white; width: 420px; border-radius: 24px; padding: 24px; 
+  box-shadow: 0 15px 50px rgba(0,0,0,0.15); display: flex; align-items: flex-start; 
+  gap: 24px; position: relative; border: 1px solid #f0f0f0;
+`;
+
+const FAQTabList = styled.div` display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; &::-webkit-scrollbar { display: none; } `;
+const TabItem = styled.button` 
+  padding: 10px 20px; white-space: nowrap; border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.3s; 
+  border: 1px solid ${props => props.active ? '#007bff' : '#eee'}; 
+  background: ${props => props.active ? '#007bff' : 'white'}; 
+  color: ${props => props.active ? 'white' : '#666'}; 
+  &:hover { background: #007bff; color: white; border-color: #007bff; }
 `;
 
 function App() {
+  const [view, setView] = useState('home');
   const [openFAQ, setOpenFAQ] = useState(null);
-  const [activeTab, setActiveTab] = useState('Eligibility & Application');
+  const [activeFAQTab, setActiveFAQTab] = useState('Eligibility & Application');
   const [showNudge, setShowNudge] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
-  const tabsRef = useRef(null);
-
-  const handleClosePopup = () => {
-    setIsClosing(true);
-    setTimeout(() => { setShowNudge(false); }, 600);
-  };
-
-  const trainingData = [
-    { name: "Python", photo: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400" },
-    { name: "Excel", photo: "https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2024/11/ai-excel-1.jpg?w=1600" },
-    { name: "Web Development", photo: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" },
-    { name: "Marketing", photo: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=400" }
-  ];
-
-  const row1 = [  
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" } ,
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-                  { n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" } ,
-                  { n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" } ,
-                  { n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-  ];
-  const row2 = [
-                  {n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" } ,
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-                  { n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" } ,
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-                  { n: "Rahul", p: "https://i.pravatar.cc/150?u=3", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-                  { n: "Vikram", p: "https://i.pravatar.cc/150?u=4", c: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" } ,
-                  { n: "Sneha", p: "https://i.pravatar.cc/150?u=2", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-                  { n: "Amit", p: "https://i.pravatar.cc/150?u=1", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-  ];
-  
-  const companies = [
-    "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", 
-    "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Corporate_logo.svg/2560px-Adobe_Corporate_logo.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
-    "https://1000logos.net/wp-content/uploads/2017/02/Twitter-Logosu.png",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png"
-  ];
 
   const faqData = {
   'Eligibility & Application': [
@@ -240,118 +200,190 @@ function App() {
     { q: "Is there a community group?", a: "Yes, you will join a batch-specific community for networking." }
   ]
 };
-  const tabs = Object.keys(faqData);
 
-  /* NAVIGATION LOGIC */
-  const navigateTab = (dir) => {
-    const currentIndex = tabs.indexOf(activeTab);
-    const newIndex = dir === 'next' ? (currentIndex + 1) % tabs.length : (currentIndex - 1 + tabs.length) % tabs.length;
-    setActiveTab(tabs[newIndex]);
-    setOpenFAQ(null);
-  };
+  const faqTabs = Object.keys(faqData);
 
-  const logosArray = [
-    { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "15%", r: "20s", d: "-2s", sz: "150px" },
-    { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "12%", r: "32s", d: "-5s", sz: "120px" },
-    { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "68%", r: "16s", d: "-10s", sz: "160px" },
-    { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "40%", r: "28s", d: "-7s", sz: "130px" },
-    { n: "Apple", s: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", t: "55%", r: "22s", d: "-3s", sz: "140px" },
-    { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "30%", r: "26s", d: "-6s", sz: "150px" },
-    { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG5.png", t: "75%", r: "18s", d: "-4s", sz: "120px" },
-    { n: "LinkedIn", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/LinkedIn_Logo_2013.svg/2560px-LinkedIn_Logo_2013.svg.png", t: "75%", r: "28s", d: "-4s", sz: "120px" },
-    { n: "Twitter", s: "https://static.vecteezy.com/system/resources/previews/018/930/695/non_2x/twitter-logo-twitter-icon-transparent-free-free-png.png", t: "20%", r: "30s", d: "-8s", sz: "130px" },
-    { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg", t: "50%", r: "24s", d: "-9s", sz: "140px" },
-    { n: "Adobe", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Adobe_Corporate_logo.svg/2560px-Adobe_Corporate_logo.svg.png", t: "35%", r: "38s", d: "-2s", sz: "150px" },
-    { n: "Salesforce", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr474wjLVJjrDHLjLZ263TQdrKYQWogURv9w&s", t: "60%", r: "40s", d: "-5s", sz: "130px" }, 
-    { n: "IBM", s: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", t: "45%", r: "29s", d: "-7s", sz: "140px" },
-    { n: "Intel", s: "https://upload.wikimedia.org/wikipedia/commons/6/64/Intel-logo-2022.png", t: "25%", r: "20s", d: "-3s", sz: "120px" },
-    
+  const handleClosePopup = () => { setIsClosing(true); setTimeout(() => setShowNudge(false), 600); };
+  const navigateFAQ = (dir) => { const tabs = Object.keys(faqData); const currentIndex = tabs.indexOf(activeFAQTab); const nextIndex = dir === 'next' ? (currentIndex + 1) % tabs.length : (currentIndex - 1 + tabs.length) % tabs.length; setActiveFAQTab(tabs[nextIndex]); setOpenFAQ(null); };
+
+  const companies = [
+    "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png",
+    "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19748.png",
+    "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+    "https://www.freepnglogos.com/uploads/apple-logo-png/apple-logo-png-dallas-shootings-don-add-are-speech-zones-used-4.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1280px-Infosys_logo.svg.png",
+    "https://1000logos.net/wp-content/uploads/2020/05/Wipro-logo.jpg",
+  ];
+
+  const studentData1 = [
+    { n: "Sonal", p: "https://i.pravatar.cc/150?u=11", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Abhishek", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Ritika", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Karan", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Neha", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Vikram", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Pooja", p: "https://i.pravatar.cc/150?u=17", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Rohit", p: "https://i.pravatar.cc/150?u=18", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" }
+  ];
+  const studentData2 = [
+   { n: "Anjali", p: "https://i.pravatar.cc/150?u=21", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+   { n: "Manish", p: "https://i.pravatar.cc/150?u=22", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+   { n: "Divya", p: "https://i.pravatar.cc/150?u=23", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+   { n: "Amit", p: "https://i.pravatar.cc/150?u=24", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+   { n: "Sneha", p: "https://i.pravatar.cc/150?u=25", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+   { n: "Rahul", p: "https://i.pravatar.cc/150?u=26", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+   { n: "Kavita", p: "https://i.pravatar.cc/150?u=27", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+   { n: "Suresh", p: "https://i.pravatar.cc/150?u=28", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" }
+  ];
+
+  const trainings = [
+    { t: "Programming in Python with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400" },
+    { t: "Programming in Excel with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
+    { t: "Programming in Web Dev with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" },
+    { t: "Programming in Digital Marketing with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400" },
   ];
 
   return (
     <>
       <GlobalStyles />
+      <Navbar>
+        <NavButton active={view === 'home'} onClick={() => setView('home')}><Home size={18}/> Home</NavButton>
+        <NavButton active={view === 'jobs'} onClick={() => setView('jobs')}><JobIcon size={18}/> Job-Portal</NavButton>
+        <NavButton active={view === 'courses'} onClick={() => setView('courses')}><GraduationCap size={18}/> Courses</NavButton>
+      </Navbar>
+
       <MainContainer>
-        <ContentWrapper>
-          <SectionHeader>Placement Courses with AI</SectionHeader>
-          <CourseGrid>
-            {["Data Scientist", "Full Stack Developer","Digital Marketer","HR Manager"].map((role, i) => (
-              <CourseCard key={i}>
-                <Ribbon />
-                <div className="rating-badge"><Star size={20} fill="#ff9f00" stroke="none" /> 4.5</div>
-                <div className="title">{role}</div>
-                <div className="info-row"><Clock size={16} color="#007bff"/> 6 months | LIVE</div>
-                <button className="btn-know">Know More</button>
-              </CourseCard>
-            ))}
-          </CourseGrid>
-          <SectionHeader>Other in-demand trainings</SectionHeader>
-        </ContentWrapper>
-
-        <TrainingSlider>
-          {trainingData.map((item, i) => (
-            <TrainingCard key={i}><div className="img-box"><img src={item.photo} alt={item.name} /></div><div className="train-title">Programming in {item.name} with AI</div><div className="price-row"><span className="curr-price">₹999</span><span className="old-price">₹4,499</span></div></TrainingCard>
-          ))}
-        </TrainingSlider>
-
-        <StudentSection>
-          <ContentWrapper><SectionHeader>Our learners got placed. So can you!</SectionHeader></ContentWrapper>
-          <MarqueeWrapper><MarqueeTrack speed="30s">{[...row1, ...row1].map((l, i) => (<LearnerCard key={i}><img src={l.p} className="profile" /><div className="name">{l.n}</div><img src={l.c} className="placed-logo" /></LearnerCard>))}</MarqueeTrack></MarqueeWrapper>
-          <MarqueeWrapper><MarqueeTrack speed="30s">{[...row2, ...row2].map((l, i) => (<LearnerCard key={i}><img src={l.p} className="profile" /><div className="name">{l.n}</div><img src={l.c} className="placed-logo" /></LearnerCard>))}</MarqueeTrack></MarqueeWrapper>
-        </StudentSection>
-
-        <ContentWrapper><SectionHeader>Top Companies Hiring On HireNext</SectionHeader></ContentWrapper>
-        <MarqueeWrapper fade><MarqueeTrack speed="25s">{[...companies, ...companies].map((url, i) => (<CompanyLogo key={i} src={url} />))}</MarqueeTrack></MarqueeWrapper>
-
-        <FloatingSectionContainer>
-          <SectionHeader>Every 3rd software engineer in India is on HireNext</SectionHeader>
-          {logosArray.map((logo, i) => (
-            <FloatingLogo key={i} top={logo.t} rollDuration={logo.r} delay={logo.d} size={logo.sz}>
-              <img src={logo.s} alt={logo.n} />
-              <div className="name-label">{logo.n}</div> 
-            </FloatingLogo>
-          ))}
-        </FloatingSectionContainer>
-
-        <ImageSection><img src="/New.png" alt="App Download Section" /></ImageSection>
-
-        <FAQSection>
-          <FAQHeaderRow>
-            <FAQHeading>FAQ's</FAQHeading>
-            <div style={{display:'flex', gap:'12px'}}>
-               <button onClick={() => navigateTab('prev')} style={{borderRadius:'50%', width:'36px', height:'36px', background:'#000', color:'#fff', border:'none', cursor:'pointer'}}><ChevronLeft size={20}/></button>
-               <button onClick={() => navigateTab('next')} style={{borderRadius:'50%', width:'36px', height:'36px', background:'#000', color:'#fff', border:'none', cursor:'pointer'}}><ChevronRight size={20}/></button>
+        {view === 'home' && (
+          <ContentWrapper>
+            <SectionHeader>Placement Courses with AI</SectionHeader>
+            <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:'25px'}}>
+              {["Data Scientist", "Full Stack Developer","Digital Marketer" ,"HR Manager"].map((role, i) => (
+                <div key={i} style={{background:'#fff', padding:'25px', borderRadius:'16px', position:'relative', border:'1px solid #eee', boxShadow:'0 4px 15px rgba(0,0,0,0.05)'}}>
+                  <Ribbon />
+                  <div style={{position:'absolute', top:'15px', right:'15px', color:'#ff9f00', fontWeight:700}}><Star size={25} fill="currentColor"/> </div>
+                  <h3 style={{color:'#007bff', fontSize:'22px', marginBottom:'10px', fontWeight:700}}>{role}</h3>
+                  <button style={{width:'100%', marginTop:'20px', padding:'12px', background:'#007bff', color:'#fff', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:600}}>Know More</button>
+                </div>
+              ))}
             </div>
-          </FAQHeaderRow>
-          <FAQTabs ref={tabsRef}>{tabs.map(tab => (<Tab key={tab} active={activeTab === tab} onClick={() => setActiveTab(tab)}>{tab}</Tab>))}</FAQTabs>
-          {faqData[activeTab]?.map((item, index) => (
-            <AccordionItem key={index}>
-              <Question onClick={() => setOpenFAQ(openFAQ === index ? null : index)}><span>Q. {item.q}</span>{openFAQ === index ? <Minus size={20}/> : <Plus size={20} color="#007bff"/>}</Question>
-              {openFAQ === index && <Answer>{item.a}</Answer>}
-            </AccordionItem>
-          ))}
-        </FAQSection>
+          </ContentWrapper>
+        )}
+
+        {view === 'jobs' && (
+          <div style={{ position: 'relative', width: '100%', height: '700px', overflow: 'hidden', textAlign: 'center' }}>
+            <SectionHeader>Every 3rd software engineer in India is on HireNext</SectionHeader>
+            {[
+  { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "5%", r: "22s", d: "-2s", sz: "150px" },
+  { n: "PhonePe", s: "https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png", t: "12%", r: "28s", d: "-15s", sz: "100px" },
+  { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "18%", r: "32s", d: "-5s", sz: "120px" },
+  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "25%", r: "19s", d: "-10s", sz: "70px" },
+  { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "32%", r: "40s", d: "-7s", sz: "70px" },
+  { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "38%", r: "35s", d: "-12s", sz: "130px" },
+  { n: "Apple", s: "https://img.icons8.com/ios_filled/1200/mac-os.png", t: "45%", r: "31s", d: "-20s", sz: "90px" },
+  { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png", t: "52%", r: "52s", d: "-18s", sz: "140px" },
+  { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG3.png", t: "58%", r: "51s", d: "-25s", sz: "200px" },
+  { n: "Coca Cola", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png", t: "65%", r: "32s", d: "-3s", sz: "30px" },
+  { n: "Dell", s: "https://www.pngplay.com/wp-content/uploads/7/Dell-Transparent-File.png", t: "72%", r: "20s", d: "-8s", sz: "230px" },
+  { n: "hp", s: "https://download.logo.wine/logo/Hewlett-Packard/Hewlett-Packard-Logo.wine.png", t: "78%", r: "26s", d: "-14s", sz: "90px" },
+  { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "84%", r: "22s", d: "-10s", sz: "30px" },
+  { n: "Intel", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Intel_logo_%282006-2020%29.svg/1200px-Intel_logo_%282006-2020%29.svg.png?20200807225939", t: "90%", r: "28s", d: "-19s", sz: "70px" },
+  { n: "IBM", s: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", t: "10%", r: "36s", d: "-22s", sz: "200px" }
+   ]
+.map((logo, i) => (
+              <FloatingLogo key={i} top={logo.t} rollDuration={logo.r}><img src={logo.s} /><div className="name-label">{logo.n}</div></FloatingLogo>
+            ))}
+          </div>
+        )}
+
+        {view === 'courses' && (
+          <>
+            <SectionHeader>Top Companies Hiring On HireNext</SectionHeader>
+            {/* --- Fading applied strictly to company marquee --- */}
+            <FadedMarqueeWrapper>
+               <MarqueeTrack speed="25s">
+                 <CompanyMobileContainer>
+                   {[...companies, ...companies].map((url, i) => (<img key={i} src={url} className="company-logo-img" alt="logo" />))}
+                 </CompanyMobileContainer>
+               </MarqueeTrack>
+            </FadedMarqueeWrapper>
+
+            <SectionHeader>Our learners got placed. So can you!</SectionHeader>
+            <StudentSectionWrapper>
+              {/* Marquee without fading strictly for students */}
+              <MarqueeWrapper>
+                <MarqueeTrack speed="40s">
+                  {[...studentData1, ...studentData1].map((s, i) => (
+                    <LearnerCard key={`row1-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" /></LearnerCard>
+                  ))}
+                </MarqueeTrack>
+              </MarqueeWrapper>
+              <MarqueeWrapper style={{marginTop:'50px'}}>
+                <MarqueeTrack reverse speed="45s">
+                  {[...studentData1, ...studentData2].map((s, i) => (
+                    <LearnerCard key={`row2-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" /></LearnerCard>
+                  ))}
+                </MarqueeTrack>
+              </MarqueeWrapper>
+            </StudentSectionWrapper>
+
+            <ContentWrapper style={{marginTop: '80px'}}>
+              <SectionHeader>Other in-demand trainings</SectionHeader>
+              <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px, 1fr))', gap:'25px'}}>
+                {trainings.map((item, i) => (
+                  <TrainingCard key={i}><img src={item.i} /><div className="content"><div className="title">{item.t}</div><div className="price">₹{item.p} <span className="old-price">₹{item.o}</span></div></div></TrainingCard>
+                ))}
+              </div>
+            </ContentWrapper>
+
+            <ContentWrapper style={{marginTop:'80px'}}>
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: '25px'}}>
+                <h2 style={{fontSize: '32px', fontWeight: 800}}>FAQ's</h2>
+                <div style={{display:'flex', gap:'12px'}}>
+                  <button onClick={() => navigateFAQ('prev')} style={{width:'40px', height:'40px', borderRadius:'50%', border:'1px solid #eee', background:'white', cursor:'pointer'}}><ChevronLeft size={20} /></button>
+                  <button onClick={() => navigateFAQ('next')} style={{width:'40px', height:'40px', borderRadius:'50%', border:'1px solid #eee', background:'white', cursor:'pointer'}}><ChevronRight size={20} /></button>
+                </div>
+              </div>
+              <FAQTabList>{Object.keys(faqData).map(tab => (<TabItem key={tab} active={activeFAQTab === tab} onClick={() => {setActiveFAQTab(tab); setOpenFAQ(null)}}>{tab}</TabItem>))}</FAQTabList>
+              {faqData[activeFAQTab]?.map((item, index) => (
+                <div key={index} style={{ borderBottom: '1px solid #eee', padding: '24px 0', cursor: 'pointer' }} onClick={() => setOpenFAQ(openFAQ === index ? null : index)}>
+                  <div style={{display:'flex', justifyContent:'space-between', fontWeight:600, fontSize:'18px'}}><span>Q. {item.q}</span>{openFAQ === index ? <Minus /> : <Plus color="#007bff"/>}</div>
+                  {openFAQ === index && <div style={{marginTop:'15px', color:'#666', lineHeight: '1.6'}}>{item.a}</div>}
+                </div>
+              ))}
+            </ContentWrapper>
+          </>
+        )}
       </MainContainer>
 
-      <AppDownloadNudgeWrapper show={showNudge} isClosing={isClosing}>
-        <PinkTab>Download the App!</PinkTab>
-        <div style={{background: 'white', width: '420px', borderRadius: '24px', padding: '24px', boxShadow: '0 15px 50px rgba(0, 0, 0, 0.15)', display: 'flex', alignItems: 'center', gap: '24px', position: 'relative', border: '1px solid #f0f0f0'}}>
-          <button onClick={handleClosePopup} style={{position:'absolute', top:'10px', right:'10px', border:'none', background:'none', cursor:'pointer'}}><X size={18} /></button>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://hirenext.app" style={{borderRadius:'12px', border:'1px solid #eee'}} alt="QR" />
-          <NudgeStats>
-            <div className="stats-row-container">
-              <div className="stat-group"><div className="rating">4.2 <Star size={18} fill="#FFC107" color="#FFC107" /></div><div className="sub-text">39K Reviews</div></div>
-              <div style={{ width: '1px', height: '30px', background: '#eee' }}></div>
-              <div className="stat-group"><div className="downloads">50L+ <Download size={18} /></div><div className="sub-text">Downloads</div></div>
+      {showNudge && (
+        <AppPopupWrapper isClosing={isClosing}>
+          <PinkPill>Download the App!</PinkPill>
+          <MainPopupBody>
+            <button onClick={handleClosePopup} style={{ position: 'absolute', top: '10px', right: '15px', border: 'none', background: 'none', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            <div style={{textAlign:'center'}}>
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=95x95&data=hirenext" style={{borderRadius:'8px', border:'1px solid #eee', width:'85px'}} />
+              <div style={{fontSize:'9px', fontWeight:800, color:'#555', marginTop: '5px'}}>SCAN THE QR</div>
             </div>
-            <div style={{ marginTop: '10px', borderTop: '1px solid #eee', paddingTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>Available on</span>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style={{height:'14px'}} alt="Apple" />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" style={{height:'14px'}} alt="Play Store" />
+            <div style={{flex: 1}}>
+               <div style={{display:'flex', alignItems:'center', gap:'12px', marginBottom:'10px'}}>
+                  <div><div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>4.2 <Star size={18} fill="#FFC107" color="#FFC107" /></div><div style={{fontSize:'10px', color:'#999'}}>39K Reviews</div></div>
+                  <div style={{width:'1px', height:'35px', background:'#eee'}}></div>
+                  <div><div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>50L+ <Download size={18} /></div><div style={{fontSize:'10px', color:'#999'}}>Downloads</div></div>
+               </div>
+               <div style={{borderTop:'1px solid #eee', paddingTop:'10px'}}>
+                  <div style={{fontSize:'10px', color:'#888', marginBottom:'5px'}}>Available on</div>
+                  <div style={{display:'flex', gap:'8px'}}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style={{height:'16px'}} alt="apple" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" style={{height:'16px'}} alt="google" />
+                  </div>
+               </div>
             </div>
-          </NudgeStats>
-        </div>
-      </AppDownloadNudgeWrapper>
+          </MainPopupBody>
+        </AppPopupWrapper>
+      )}
     </>
   );
 }
