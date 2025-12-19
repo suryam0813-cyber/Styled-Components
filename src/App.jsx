@@ -42,7 +42,7 @@ const Ribbon = styled.div`
   &::before {
     content: 'Newly Launched'; position: absolute; top: 30px; right: -35px; width: 180px; background: #ff4d00;
     color: #fff; font-size: 10px; font-weight: 700; text-align: center; line-height: 22px; transform: rotate(45deg);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-transform: uppercase;
+    box-shadow: 20px 10px 1px  rgba(0,0,0,0.1); text-transform: uppercase;
   }
 `;
 
@@ -152,19 +152,38 @@ function App() {
   const studentData1 = [
     { n: "Sonal", p: "https://i.pravatar.cc/150?u=11", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
     { n: "Abhishek", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" }
+    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+  { n: "Anita", p: "https://i.pravatar.cc/150?u=17", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+  { n: "Karan", p: "https://i.pravatar.cc/150?u=18", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+  { n: "Deepa", p: "https://i.pravatar.cc/150?u=19", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+  { n: "Rahul", p: "https://i.pravatar.cc/150?u=20", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+  { n: "Sneha", p: "https://i.pravatar.cc/150?u=21", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+  { n: "Amit", p: "https://i.pravatar.cc/150?u=22", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+  { n: "Pooja", p: "https://i.pravatar.cc/150?u=23", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+  { n: "Vishal", p: "https://i.pravatar.cc/150?u=24", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+  { n: "Meera", p: "https://i.pravatar.cc/150?u=25", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" }
   ];
 
   const studentData2 = [
     { n: "Priya", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
     { n: "Vikram", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-    { n: "Rohan", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }
+    { n: "Rohan", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Anjali", p: "https://i.pravatar.cc/150?u=26", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Suresh", p: "https://i.pravatar.cc/150?u=27", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Kavita", p: "https://i.pravatar.cc/150?u=28", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Manish", p: "https://i.pravatar.cc/150?u=29", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Ritu", p: "https://i.pravatar.cc/150?u=30", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { n: "Ajay", p: "https://i.pravatar.cc/150?u=31", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Neha", p: "https://i.pravatar.cc/150?u=32", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Sanjay", p: "https://i.pravatar.cc/150?u=33", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { n: "Tina", p: "https://i.pravatar.cc/150?u=34", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" }
   ];
 
   const trainings = [
     { t: "Programming in Python with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400" },
     { t: "Programming in Excel with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-    { t: "Programming in Web Dev with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" }
+    { t: "Programming in Web Dev with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" },
+    { t: "Programming in Data Science with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400" }
   ];
 
   const handleClosePopup = () => { setIsClosing(true); setTimeout(() => setShowNudge(false), 600); };
@@ -190,10 +209,10 @@ function App() {
           <ContentWrapper>
             <SectionHeader>Placement Courses with AI</SectionHeader>
             <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:'25px'}}>
-              {["Data Scientist", "Full Stack Developer", "HR Manager"].map((role, i) => (
+              {["Data Scientist", "Full Stack Developer","Digital Marketer","HR Manager"].map((role, i) => (
                 <div key={i} style={{background:'#fff', padding:'25px', borderRadius:'16px', position:'relative', border:'1px solid #eee', boxShadow:'0 4px 15px rgba(0,0,0,0.05)'}}>
                   <Ribbon />
-                  <div style={{position:'absolute', top:'15px', right:'15px', color:'#ff9f00', fontWeight:700, display:'flex', alignItems:'center', gap:'4px'}}><Star size={16} fill="currentColor"/> 4.5</div>
+                  <div style={{position:'absolute', top:'15px', right:'15px', color:'#ff9f00', fontWeight:700, display:'flex', alignItems:'center', gap:'4px'}}><Star size={30} fill="currentColor"/> </div>
                   <h3 style={{color:'#007bff', fontSize:'22px', marginBottom:'10px', fontWeight:700}}>{role}</h3>
                   <div style={{fontSize:'13px', color:'#555'}}><Clock size={14}/> 6 months | LIVE</div>
                   <button style={{width:'100%', marginTop:'20px', padding:'12px', background:'#007bff', color:'#fff', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:600}}>Know More</button>
@@ -207,10 +226,26 @@ function App() {
           <div style={{ position: 'relative', width: '100%', height: '700px', overflow: 'hidden', textAlign: 'center' }}>
             <SectionHeader>Floating Objects Job Portal</SectionHeader>
             {[
-              { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "15%", r: "20s", sz: "150px" },
-              { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "45%", r: "28s", sz: "120px" },
-              { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "20%", r: "25s", sz: "110px" }
-            ].map((logo, i) => (
+  { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "5%", r: "18s", d: "-2s", sz: "150px" },
+  { n: "PhonePe", s: "https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png", t: "12%", r: "24s", d: "-15s", sz: "100px" },
+  { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "19%", r: "28s", d: "-5s", sz: "120px" },
+  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "26%", r: "16s", d: "-10s", sz: "70px" },
+  { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "33%", r: "35s", d: "-7s", sz: "70px" },
+  { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "40%", r: "30s", d: "-12s", sz: "130px" },
+  { n: "Apple", s: "https://img.icons8.com/ios_filled/1200/mac-os.png", t: "47%", r: "26s", d: "-20s", sz: "90px" },
+  { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png", t: "54%", r: "45s", d: "-18s", sz: "140px" },
+  { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG3.png", t: "61%", r: "40s", d: "-25s", sz: "200px" },
+  { n: "Coca Cola", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png", t: "68%", r: "28s", d: "-3s", sz: "30px" },
+  { n: "Dell", s: "https://www.pngplay.com/wp-content/uploads/7/Dell-Transparent-File.png", t: "75%", r: "15s", d: "-8s", sz: "230px" },
+  { n: "hp", s: "https://download.logo.wine/logo/Hewlett-Packard/Hewlett-Packard-Logo.wine.png", t: "82%", r: "22s", d: "-14s", sz: "90px" },
+  { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "89%", r: "19s", d: "-10s", sz: "30px" },
+  { n: "Intel", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Intel_logo_%282006-2020%29.svg/1200px-Intel_logo_%282006-2020%29.svg.png?20200807225939", t: "96%", r: "24s", d: "-19s", sz: "70px" },
+  { n: "IBM", s: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", t: "2%", r: "32s", d: "-22s", sz: "200px" },
+  { n: "Twitter", s: "https://img.freepik.com/premium-vector/round-twitter-logo-isolated-white-background_469489-899.jpg?semt=ais_hybrid&w=740&q=80", t: "15%", r: "27s", d: "-6s", sz: "150px" },
+  { n: "LinkedIn", s: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png", t: "28%", r: "38s", d: "-16s", sz: "80px" },
+  { n: "Adobe", s: "https://1000logos.net/wp-content/uploads/2021/04/Adobe-logo.png", t: "41%", r: "29s", d: "-9s", sz: "120px" },
+  { n: "Samsung", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_8rNzfm30Z3wteJhxxlQPOFMkaHtOLvQhuw&s", t: "54%", r: "34s", d: "-4s", sz: "100px" }
+].map((logo, i) => (
               <FloatingLogo key={i} top={logo.t} rollDuration={logo.r} size={logo.sz}><img src={logo.s} alt={logo.n} /><div className="name-label">{logo.n}</div></FloatingLogo>
             ))}
           </div>
@@ -234,7 +269,7 @@ function App() {
                   ))}
                 </MarqueeTrack>
               </MarqueeWrapper>
-              <MarqueeWrapper style={{marginTop:'-10px'}}>
+              <MarqueeWrapper style={{marginTop:'50px'}}>
                 <MarqueeTrack reverse speed="45s">
                   {[...studentData2, ...studentData2].map((s, i) => (
                     <LearnerCard key={`row2-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" alt="logo" /></LearnerCard>
