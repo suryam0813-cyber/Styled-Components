@@ -32,16 +32,17 @@ const NavButton = styled.button`
   border: 1px solid ${props => props.active ? '#007bff' : '#eee'};
   border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600;
   &:hover { background: #007bff; color: white; border-color: #007bff; transform: translateY(-3px); }
+  @media (max-width: 600px) { padding: 8px 12px; font-size: 12px; gap: 5px; }
 `;
 
-const SectionHeader = styled.h2` text-align: center; font-size: 38px; margin: 50px 0 30px; font-weight: 800; `;
+const SectionHeader = styled.h2` text-align: center; font-size: 38px; margin: 50px 0 30px; font-weight: 800; @media (max-width: 600px) { font-size: 24px; } `;
 
 const Ribbon = styled.div`
   position: absolute; top: 0; right: 0; width: 110px; height: 115px; overflow: hidden; pointer-events: none; z-index: 5;
   &::before {
     content: 'Newly Launched'; position: absolute; top: 30px; right: -35px; width: 180px; background: #ff4d00;
-    color: #ffffffff; font-size: 10px; font-weight: 700; text-align: center; line-height: 22px; transform: rotate(45deg);
-    box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.1); text-transform: uppercase;
+    color: #fff; font-size: 10px; font-weight: 700; text-align: center; line-height: 22px; transform: rotate(45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-transform: uppercase;
   }
 `;
 
@@ -55,14 +56,10 @@ const FloatingLogo = styled.div`
   &:hover { animation-play-state: paused; z-index: 100; transform: scale(1.1); .name-label { opacity: 1; bottom: -50px; } }
 `;
 
-// --- Marquee Without Fading (For Students) ---
+// --- FIXED COMPANY LOGO MARQUEE ---
 const MarqueeWrapper = styled.div`
   width: 100vw; overflow: hidden; position: relative; margin: 20px 0;
   left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
-`;
-
-// --- Fading Effect strictly for Company logos ---
-const FadedMarqueeWrapper = styled(MarqueeWrapper)`
   mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 `;
@@ -72,33 +69,24 @@ const MarqueeTrack = styled.div`
   animation: ${props => props.reverse ? scrollRight : scrollLeft} ${props => props.speed || '40s'} linear infinite;
   align-items: center;
   &:hover { animation-play-state: paused; }
-  img.company-logo-img { height: 45px; width: auto; object-fit: contain; margin: 0 50px; }
+  img.company-logo-img { 
+    height: 45px; width: auto; max-width: 150px; object-fit: contain; margin: 0 50px; 
+    @media (max-width: 600px) { height: 30px; margin: 0 20px; } /* Fix oversized logos in mobile */
+  }
 `;
 
 const StudentSectionWrapper = styled.div`
   background-color: #f8f9fa; width: 100vw; padding: 60px 0; position: relative;
-  left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
+  left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; bottom: 20px;
 `;
 
 const LearnerCard = styled.div`
   flex: 0 0 260px; margin: 0 15px; padding: 25px; background: #ffffff; border-radius: 20px; 
-  box-shadow: 10px 11px 10px 10px rgba(0,0,0,0.08); text-align: center;
+  box-shadow: 0 10px 20px rgba(180, 179, 179, 0.4); text-align: center;
   img.profile { width: 110px; height: 110px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
   .name { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
   img.placed-logo { height: 25px; width: auto; max-width: 100px; object-fit: contain; margin: 10px auto; display: block; }
-`;
-
-// Mobile grid for 3 logos
-const CompanyMobileContainer = styled.div`
-  width: 100%;
-  display: flex;
-  @media (max-width: 768px) {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    padding: 0 20px;
-    img { margin: 0 auto !important; width: 80% !important; height: auto !important; }
-  }
+  @media (max-width: 600px) { flex: 0 0 200px; padding: 15px; img.profile { width: 80px; height: 80px; } }
 `;
 
 const TrainingCard = styled.div`
@@ -116,6 +104,7 @@ const AppPopupWrapper = styled.div`
   position: fixed; bottom: 30px; right: 30px; z-index: 10000;
   display: flex; flex-direction: column; align-items: flex-start;
   animation: ${props => props.isClosing ? slideOutLeft : 'none'} 0.6s forwards;
+  @media (max-width: 600px) { right: 10px; bottom: 10px; width: calc(100% - 20px); }
 `;
 
 const PinkPill = styled.div`
@@ -123,10 +112,12 @@ const PinkPill = styled.div`
   font-size: 12px; font-weight: 700; margin-left: 20px;
 `;
 
+// --- FIXED POPUP BODY ---
 const MainPopupBody = styled.div`
   background: white; width: 420px; border-radius: 24px; padding: 24px; 
-  box-shadow: 0 15px 50px rgba(0,0,0,0.15); display: flex; align-items: flex-start; 
-  gap: 24px; position: relative; border: 1px solid #f0f0f0;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.15); display: flex; align-items: center; 
+  gap: 20px; position: relative; border: 1px solid #f0f0f0;
+  @media (max-width: 600px) { width: 100%; padding: 15px; gap: 10px; }
 `;
 
 const FAQTabList = styled.div` display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; &::-webkit-scrollbar { display: none; } `;
@@ -146,105 +137,44 @@ function App() {
   const [isClosing, setIsClosing] = useState(false);
 
   const faqData = {
-  'Eligibility & Application': [
-    { q: "Who is eligible to apply for the Placement course?", a: "Graduates and final-year students from any discipline are eligible." },
-    { q: "I am in the early years of college, can I still apply?", a: "This program is for those graduating within the next 12 months." },
-    { q: "I have more than 3 years of work experience, can I apply?", a: "Yes, career switchers are fully supported." },
-    { q: "How can I reserve my seat in advance?", a: "Complete the assessment and pay the booking fee." },
-    { q: "What questions will the application process consist of?", a: "It consists of technical aptitude and career goal questions." },
-    { q: "On what parameters would my application be evaluated?", a: "Based on technical scores and profile assessment." },
-    { q: "My application was rejected, can I join the course?", a: "Rejections for specific batches are final." },
-    { q: "My account was rejected, can I re-apply?", a: "Yes, you can re-apply after 3 months." },
-    { q: "Does HireNext provide other courses?", a: "Yes, we offer multiple placement tracks." }
-  ],
-  'Program Prerequisites': [
-    { q: "Do I need prior coding knowledge?", a: "No, we teach skills from the absolute basics." },
-    { q: "What hardware is required?", a: "A laptop with at least 8GB RAM and a stable internet connection." },
-    { q: "Are there any age restrictions?", a: "No, anyone looking to start a career in tech can apply." },
-    { q: "Is math mandatory for Data Science?", a: "Basic high-school mathematics is sufficient." },
-    { q: "Do I need to install software before starting?", a: "No, we provide a setup guide during orientation." }
-  ],
-  'Payment & Scholarships': [
-    { q: "Are there installment options?", a: "Yes, we offer No-Cost EMI plans for 6-12 months." },
-    { q: "Is there an upfront discount?", a: "Yes, full upfront payments are eligible for a 10% discount." },
-    { q: "Do you offer scholarships?", a: "Merit-based scholarships are available based on your entrance test." },
-    { q: "Is the booking fee refundable?", a: "The booking fee is generally non-refundable but can be adjusted." },
-    { q: "What payment methods are accepted?", a: "All major cards, UPI, and Net Banking are accepted." }
-  ],
-  'Course Duration & Schedule': [
-    { q: "When does the next cohort start?", a: "Batches commence on the first Monday of every month." },
-    { q: "What is the total duration of the program?", a: "The program typically spans 6 months of training." },
-    { q: "Are the sessions live or recorded?", a: "All sessions are LIVE, with recordings available for review." },
-    { q: "Can I attend classes on weekends?", a: "Yes, we have dedicated weekend batches for working professionals." },
-    { q: "How many hours per week should I dedicate?", a: "Plan for at least 15-20 hours of study per week." }
-  ],
-  'Placement Support': [
-    { q: "Do you guarantee a job?", a: "We provide a placement guarantee with a full refund if unplaced." },
-    { q: "What is the average CTC offered?", a: "Our graduates typically receive offers between 5 LPA to 18 LPA." },
-    { q: "Will you help with my resume?", a: "Yes, we conduct dedicated resume-building workshops." },
-    { q: "Do you provide mock interviews?", a: "Yes, multiple rounds of technical and HR mock interviews are held." },
-    { q: "Which companies hire from HireNext?", a: "Over 500+ partners including Google, Amazon, and Microsoft." }
-  ],
-  'Certification': [
-    { q: "Will I get a certificate?", a: "Yes, you receive an industry-recognized certificate upon completion." },
-    { q: "Is the certificate verified?", a: "Yes, each certificate comes with a unique verification ID." },
-    { q: "Can I share this on LinkedIn?", a: "Absolutely! Our certificates are optimized for LinkedIn sharing." },
-    { q: "When will I receive my certificate?", a: "Within 7 working days after completing all projects." },
-    { q: "Is the certificate valid globally?", a: "Yes, our certification is recognized by global tech firms." }
-  ],
-  'Support & Mentorship': [
-    { q: "Will I have a dedicated mentor?", a: "Yes, every student is assigned a personal industry mentor." },
-    { q: "How do I resolve my doubts?", a: "We have 24/7 doubt support via our community Discord." },
-    { q: "Can I talk to alumni?", a: "Yes, we host monthly 'Alumni Connect' sessions." },
-    { q: "What if I miss a live class?", a: "You can watch the recording and ask doubts in the next session." },
-    { q: "Is there a community group?", a: "Yes, you will join a batch-specific community for networking." }
-  ]
-};
-
-  const faqTabs = Object.keys(faqData);
-
-  const handleClosePopup = () => { setIsClosing(true); setTimeout(() => setShowNudge(false), 600); };
-  const navigateFAQ = (dir) => { const tabs = Object.keys(faqData); const currentIndex = tabs.indexOf(activeFAQTab); const nextIndex = dir === 'next' ? (currentIndex + 1) % tabs.length : (currentIndex - 1 + tabs.length) % tabs.length; setActiveFAQTab(tabs[nextIndex]); setOpenFAQ(null); };
+    'Eligibility & Application': [{ q: "Who is eligible?", a: "Graduates and students." }],
+    'Program Prerequisites': [{ q: "Prior coding needed?", a: "No, skills are taught from basics." }],
+    'Placement Support': [{ q: "Guarantee?", a: "Placement guarantee or full refund." }]
+  };
 
   const companies = [
     "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
     "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
     "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png",
-    "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19748.png",
-    "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
-    "https://www.freepnglogos.com/uploads/apple-logo-png/apple-logo-png-dallas-shootings-don-add-are-speech-zones-used-4.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1280px-Infosys_logo.svg.png",
-    "https://1000logos.net/wp-content/uploads/2020/05/Wipro-logo.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
   ];
 
   const studentData1 = [
     { n: "Sonal", p: "https://i.pravatar.cc/150?u=11", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
     { n: "Abhishek", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { n: "Ritika", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-    { n: "Karan", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-    { n: "Neha", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-    { n: "Vikram", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { n: "Pooja", p: "https://i.pravatar.cc/150?u=17", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-    { n: "Rohit", p: "https://i.pravatar.cc/150?u=18", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" }
+    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" }
   ];
+
   const studentData2 = [
-   { n: "Anjali", p: "https://i.pravatar.cc/150?u=21", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-   { n: "Manish", p: "https://i.pravatar.cc/150?u=22", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-   { n: "Divya", p: "https://i.pravatar.cc/150?u=23", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-   { n: "Amit", p: "https://i.pravatar.cc/150?u=24", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
-   { n: "Sneha", p: "https://i.pravatar.cc/150?u=25", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-   { n: "Rahul", p: "https://i.pravatar.cc/150?u=26", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-   { n: "Kavita", p: "https://i.pravatar.cc/150?u=27", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-   { n: "Suresh", p: "https://i.pravatar.cc/150?u=28", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" }
+    { n: "Priya", p: "https://i.pravatar.cc/150?u=14", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
+    { n: "Vikram", p: "https://i.pravatar.cc/150?u=15", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { n: "Rohan", p: "https://i.pravatar.cc/150?u=16", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }
   ];
 
   const trainings = [
     { t: "Programming in Python with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400" },
     { t: "Programming in Excel with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-    { t: "Programming in Web Dev with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" },
-    { t: "Programming in Digital Marketing with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400" },
+    { t: "Programming in Web Dev with AI", p: "999", o: "4,499", i: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" }
   ];
+
+  const handleClosePopup = () => { setIsClosing(true); setTimeout(() => setShowNudge(false), 600); };
+  const navigateFAQ = (dir) => { 
+    const tabs = Object.keys(faqData); 
+    const currentIndex = tabs.indexOf(activeFAQTab); 
+    const nextIndex = dir === 'next' ? (currentIndex + 1) % tabs.length : (currentIndex - 1 + tabs.length) % tabs.length; 
+    setActiveFAQTab(tabs[nextIndex]); 
+    setOpenFAQ(null); 
+  };
 
   return (
     <>
@@ -260,11 +190,12 @@ function App() {
           <ContentWrapper>
             <SectionHeader>Placement Courses with AI</SectionHeader>
             <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:'25px'}}>
-              {["Data Scientist", "Full Stack Developer","Digital Marketer" ,"HR Manager"].map((role, i) => (
+              {["Data Scientist", "Full Stack Developer", "HR Manager"].map((role, i) => (
                 <div key={i} style={{background:'#fff', padding:'25px', borderRadius:'16px', position:'relative', border:'1px solid #eee', boxShadow:'0 4px 15px rgba(0,0,0,0.05)'}}>
                   <Ribbon />
-                  <div style={{position:'absolute', top:'15px', right:'15px', color:'#ff9f00', fontWeight:700}}><Star size={25} fill="currentColor"/> </div>
+                  <div style={{position:'absolute', top:'15px', right:'15px', color:'#ff9f00', fontWeight:700, display:'flex', alignItems:'center', gap:'4px'}}><Star size={16} fill="currentColor"/> 4.5</div>
                   <h3 style={{color:'#007bff', fontSize:'22px', marginBottom:'10px', fontWeight:700}}>{role}</h3>
+                  <div style={{fontSize:'13px', color:'#555'}}><Clock size={14}/> 6 months | LIVE</div>
                   <button style={{width:'100%', marginTop:'20px', padding:'12px', background:'#007bff', color:'#fff', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:600}}>Know More</button>
                 </div>
               ))}
@@ -274,26 +205,13 @@ function App() {
 
         {view === 'jobs' && (
           <div style={{ position: 'relative', width: '100%', height: '700px', overflow: 'hidden', textAlign: 'center' }}>
-            <SectionHeader>Every 3rd software engineer in India is on HireNext</SectionHeader>
+            <SectionHeader>Floating Objects Job Portal</SectionHeader>
             {[
-  { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "5%", r: "22s", d: "-2s", sz: "150px" },
-  { n: "PhonePe", s: "https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png", t: "12%", r: "28s", d: "-15s", sz: "100px" },
-  { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "18%", r: "32s", d: "-5s", sz: "120px" },
-  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "25%", r: "19s", d: "-10s", sz: "70px" },
-  { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "32%", r: "40s", d: "-7s", sz: "70px" },
-  { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "38%", r: "35s", d: "-12s", sz: "130px" },
-  { n: "Apple", s: "https://img.icons8.com/ios_filled/1200/mac-os.png", t: "45%", r: "31s", d: "-20s", sz: "90px" },
-  { n: "Netflix", s: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png", t: "52%", r: "52s", d: "-18s", sz: "140px" },
-  { n: "Meta", s: "https://pngimg.com/uploads/meta/meta_PNG3.png", t: "58%", r: "51s", d: "-25s", sz: "200px" },
-  { n: "Coca Cola", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png", t: "65%", r: "32s", d: "-3s", sz: "30px" },
-  { n: "Dell", s: "https://www.pngplay.com/wp-content/uploads/7/Dell-Transparent-File.png", t: "72%", r: "20s", d: "-8s", sz: "230px" },
-  { n: "hp", s: "https://download.logo.wine/logo/Hewlett-Packard/Hewlett-Packard-Logo.wine.png", t: "78%", r: "26s", d: "-14s", sz: "90px" },
-  { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "84%", r: "22s", d: "-10s", sz: "30px" },
-  { n: "Intel", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Intel_logo_%282006-2020%29.svg/1200px-Intel_logo_%282006-2020%29.svg.png?20200807225939", t: "90%", r: "28s", d: "-19s", sz: "70px" },
-  { n: "IBM", s: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", t: "10%", r: "36s", d: "-22s", sz: "200px" }
-   ]
-.map((logo, i) => (
-              <FloatingLogo key={i} top={logo.t} rollDuration={logo.r}><img src={logo.s} /><div className="name-label">{logo.n}</div></FloatingLogo>
+              { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "15%", r: "20s", sz: "150px" },
+              { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "45%", r: "28s", sz: "120px" },
+              { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "20%", r: "25s", sz: "110px" }
+            ].map((logo, i) => (
+              <FloatingLogo key={i} top={logo.t} rollDuration={logo.r} size={logo.sz}><img src={logo.s} alt={logo.n} /><div className="name-label">{logo.n}</div></FloatingLogo>
             ))}
           </div>
         )}
@@ -301,29 +219,25 @@ function App() {
         {view === 'courses' && (
           <>
             <SectionHeader>Top Companies Hiring On HireNext</SectionHeader>
-            {/* --- Fading applied strictly to company marquee --- */}
-            <FadedMarqueeWrapper>
+            <MarqueeWrapper>
                <MarqueeTrack speed="25s">
-                 <CompanyMobileContainer>
-                   {[...companies, ...companies].map((url, i) => (<img key={i} src={url} className="company-logo-img" alt="logo" />))}
-                 </CompanyMobileContainer>
+                 {[...companies, ...companies, ...companies].map((url, i) => (<img key={i} src={url} className="company-logo-img" alt="logo" />))}
                </MarqueeTrack>
-            </FadedMarqueeWrapper>
+            </MarqueeWrapper>
 
             <SectionHeader>Our learners got placed. So can you!</SectionHeader>
             <StudentSectionWrapper>
-              {/* Marquee without fading strictly for students */}
               <MarqueeWrapper>
                 <MarqueeTrack speed="40s">
                   {[...studentData1, ...studentData1].map((s, i) => (
-                    <LearnerCard key={`row1-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" /></LearnerCard>
+                    <LearnerCard key={`row1-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" alt="logo" /></LearnerCard>
                   ))}
                 </MarqueeTrack>
               </MarqueeWrapper>
-              <MarqueeWrapper style={{marginTop:'50px'}}>
+              <MarqueeWrapper style={{marginTop:'-10px'}}>
                 <MarqueeTrack reverse speed="45s">
-                  {[...studentData1, ...studentData2].map((s, i) => (
-                    <LearnerCard key={`row2-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" /></LearnerCard>
+                  {[...studentData2, ...studentData2].map((s, i) => (
+                    <LearnerCard key={`row2-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" alt="logo" /></LearnerCard>
                   ))}
                 </MarqueeTrack>
               </MarqueeWrapper>
@@ -333,7 +247,7 @@ function App() {
               <SectionHeader>Other in-demand trainings</SectionHeader>
               <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(250px, 1fr))', gap:'25px'}}>
                 {trainings.map((item, i) => (
-                  <TrainingCard key={i}><img src={item.i} /><div className="content"><div className="title">{item.t}</div><div className="price">₹{item.p} <span className="old-price">₹{item.o}</span></div></div></TrainingCard>
+                  <TrainingCard key={i}><img src={item.i} alt={item.t} /><div className="content"><div className="title">{item.t}</div><div className="price">₹{item.p} <span className="old-price">₹{item.o}</span></div></div></TrainingCard>
                 ))}
               </div>
             </ContentWrapper>
@@ -358,27 +272,31 @@ function App() {
         )}
       </MainContainer>
 
+      {/* --- RECTIFIED POPUP SIDE-BY-SIDE DESIGN --- */}
       {showNudge && (
         <AppPopupWrapper isClosing={isClosing}>
           <PinkPill>Download the App!</PinkPill>
           <MainPopupBody>
-            <button onClick={handleClosePopup} style={{ position: 'absolute', top: '10px', right: '15px', border: 'none', background: 'none', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            <button onClick={handleClosePopup} style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             <div style={{textAlign:'center'}}>
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=95x95&data=hirenext" style={{borderRadius:'8px', border:'1px solid #eee', width:'85px'}} />
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=95x95&data=hirenext" style={{borderRadius:'8px', border:'1px solid #eee', width:'85px'}} alt="qr" />
               <div style={{fontSize:'9px', fontWeight:800, color:'#555', marginTop: '5px'}}>SCAN THE QR</div>
             </div>
             <div style={{flex: 1}}>
                <div style={{display:'flex', alignItems:'center', gap:'12px', marginBottom:'10px'}}>
-                  <div><div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>4.2 <Star size={18} fill="#FFC107" color="#FFC107" /></div><div style={{fontSize:'10px', color:'#999'}}>39K Reviews</div></div>
+                  <div>
+                    <div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>4.2 <Star size={18} fill="#FFC107" color="#FFC107" /></div>
+                    <div style={{fontSize:'10px', color:'#999'}}>39K Reviews</div>
+                  </div>
                   <div style={{width:'1px', height:'35px', background:'#eee'}}></div>
-                  <div><div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>50L+ <Download size={18} /></div><div style={{fontSize:'10px', color:'#999'}}>Downloads</div></div>
+                  <div>
+                    <div style={{fontWeight:700, fontSize:'22px', display:'flex', alignItems:'center', gap:'6px'}}>50L+ <Download size={18} /></div>
+                    <div style={{fontSize:'10px', color:'#999'}}>Downloads</div>
+                  </div>
                </div>
                <div style={{borderTop:'1px solid #eee', paddingTop:'10px'}}>
                   <div style={{fontSize:'10px', color:'#888', marginBottom:'5px'}}>Available on</div>
-                  <div style={{display:'flex', gap:'8px'}}>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style={{height:'16px'}} alt="apple" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" style={{height:'16px'}} alt="google" />
-                  </div>
+                  <div style={{display:'flex', gap:'8px'}}><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style={{height:'16px'}} alt="apple" /><img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" style={{height:'16px'}} alt="google" /></div>
                </div>
             </div>
           </MainPopupBody>
