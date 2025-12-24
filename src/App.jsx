@@ -15,6 +15,15 @@ const scrollRight = keyframes` 0% { transform: translateX(-50%); } 100% { transf
 const float = keyframes` 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } `;
 const rollAnimation = keyframes` 0% { left: 110%; } 100% { left: -350px; } `;
 const slideOutLeft = keyframes` 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-120%); opacity: 0; } `;
+const rollX = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-2200px);
+  }
+`;
+
 
 // --- Styled Components ---
 const MainContainer = styled.div` width: 100%; min-height: 100vh; padding-bottom: 120px; `;
@@ -47,8 +56,14 @@ const Ribbon = styled.div`
 `;
 
 const FloatingLogo = styled.div`
-  position: absolute; width: ${props => props.size || '150px'}; height: ${props => props.size || '150px'};
-  background: #fff; border-radius: 50%; box-shadow: 0 8px 30px rgba(0,0,0,0.06); 
+  position: absolute; top: ${({ top }) => top};
+  left: calc(100% + ${({ index }) => index * 220}px);
+  width: ${({ size }) => size};
+  animation:
+    floatY 6s ease-in-out infinite,
+    rollX ${({ rollDuration }) => rollDuration} linear infinite;
+  animation-delay: ${({ delay }) => delay};
+  background: #fff; border-radius: \10; box-shadow: 0 8px 30px rgba(0,0,0,0.06); 
   display: flex; justify-content: center; align-items: center; top: ${props => props.top};
   animation: ${rollAnimation} ${props => props.rollDuration || '25s'} linear infinite, ${float} 6s ease-in-out infinite;
   img { width: 70%; object-fit: contain; }
@@ -58,10 +73,33 @@ const FloatingLogo = styled.div`
 
 // --- FIXED COMPANY LOGO MARQUEE ---
 const MarqueeWrapper = styled.div`
-  width: 100vw; overflow: hidden; position: relative; margin: 20px 0;
-  left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
-  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  margin: 20px 0;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+`;
+const NoFadeMarqueeWrapper = styled.div`
+  mask-image: none;
+  -webkit-mask-image: none;
 `;
 
 const MarqueeTrack = styled.div`
@@ -81,7 +119,7 @@ const StudentSectionWrapper = styled.div`
 `;
 
 const LearnerCard = styled.div`
-  flex: 0 0 260px; margin: 0 15px; padding: 25px; background: #ffffff; border-radius: 20px; 
+  flex: 0 0 260px; margin: 0 15px; padding: 25px; background: #fffefeff; border-radius: 20px; 
   box-shadow: 0 10px 20px rgba(180, 179, 179, 0.4); text-align: center;
   img.profile { width: 110px; height: 110px; border-radius: 15px; object-fit: cover; margin-bottom: 15px; }
   .name { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
@@ -128,6 +166,38 @@ const TabItem = styled.button`
   color: ${props => props.active ? 'white' : '#666'}; 
   &:hover { background: #007bff; color: white; border-color: #007bff; }
 `;
+const FAQNavButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+
+  svg {
+    transition: color 0.25s ease;
+  }
+
+  &:hover {
+    background: #007bff;
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 123, 255, 0.25);
+  }
+
+  &:hover svg {
+    color: #ffffff;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
 
 function App() {
   const [view, setView] = useState('home');
@@ -136,11 +206,61 @@ function App() {
   const [showNudge, setShowNudge] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
 
-  const faqData = {
-    'Eligibility & Application': [{ q: "Who is eligible?", a: "Graduates and students." }],
-    'Program Prerequisites': [{ q: "Prior coding needed?", a: "No, skills are taught from basics." }],
-    'Placement Support': [{ q: "Guarantee?", a: "Placement guarantee or full refund." }]
-  };
+ const faqData = {
+  'Eligibility & Application': [
+    { q: "Who is eligible to apply for the Placement course?", a: "Graduates and final-year students from any discipline are eligible." },
+    { q: "I am in the early years of college, can I still apply?", a: "This program is for those graduating within the next 12 months." },
+    { q: "I have more than 3 years of work experience, can I apply?", a: "Yes, career switchers are fully supported." },
+    { q: "How can I reserve my seat in advance?", a: "Complete the assessment and pay the booking fee." },
+    { q: "What questions will the application process consist of?", a: "It consists of technical aptitude and career goal questions." },
+    { q: "On what parameters would my application be evaluated?", a: "Based on technical scores and profile assessment." },
+    { q: "My application was rejected, can I join the course?", a: "Rejections for specific batches are final." },
+    { q: "My account was rejected, can I re-apply?", a: "Yes, you can re-apply after 3 months." },
+    { q: "Does HireNext provide other courses?", a: "Yes, we offer multiple placement tracks." }
+  ],
+  'Program Prerequisites': [
+    { q: "Do I need prior coding knowledge?", a: "No, we teach skills from the absolute basics." },
+    { q: "What hardware is required?", a: "A laptop with at least 8GB RAM and a stable internet connection." },
+    { q: "Are there any age restrictions?", a: "No, anyone looking to start a career in tech can apply." },
+    { q: "Is math mandatory for Data Science?", a: "Basic high-school mathematics is sufficient." },
+    { q: "Do I need to install software before starting?", a: "No, we provide a setup guide during orientation." }
+  ],
+  'Payment & Scholarships': [
+    { q: "Are there installment options?", a: "Yes, we offer No-Cost EMI plans for 6-12 months." },
+    { q: "Is there an upfront discount?", a: "Yes, full upfront payments are eligible for a 10% discount." },
+    { q: "Do you offer scholarships?", a: "Merit-based scholarships are available based on your entrance test." },
+    { q: "Is the booking fee refundable?", a: "The booking fee is generally non-refundable but can be adjusted." },
+    { q: "What payment methods are accepted?", a: "All major cards, UPI, and Net Banking are accepted." }
+  ],
+  'Course Duration & Schedule': [
+    { q: "When does the next cohort start?", a: "Batches commence on the first Monday of every month." },
+    { q: "What is the total duration of the program?", a: "The program typically spans 6 months of training." },
+    { q: "Are the sessions live or recorded?", a: "All sessions are LIVE, with recordings available for review." },
+    { q: "Can I attend classes on weekends?", a: "Yes, we have dedicated weekend batches for working professionals." },
+    { q: "How many hours per week should I dedicate?", a: "Plan for at least 15-20 hours of study per week." }
+  ],
+  'Placement Support': [
+    { q: "Do you guarantee a job?", a: "We provide a placement guarantee with a full refund if unplaced." },
+    { q: "What is the average CTC offered?", a: "Our graduates typically receive offers between 5 LPA to 18 LPA." },
+    { q: "Will you help with my resume?", a: "Yes, we conduct dedicated resume-building workshops." },
+    { q: "Do you provide mock interviews?", a: "Yes, multiple rounds of technical and HR mock interviews are held." },
+    { q: "Which companies hire from HireNext?", a: "Over 500+ partners including Google, Amazon, and Microsoft." }
+  ],
+  'Certification': [
+    { q: "Will I get a certificate?", a: "Yes, you receive an industry-recognized certificate upon completion." },
+    { q: "Is the certificate verified?", a: "Yes, each certificate comes with a unique verification ID." },
+    { q: "Can I share this on LinkedIn?", a: "Absolutely! Our certificates are optimized for LinkedIn sharing." },
+    { q: "When will I receive my certificate?", a: "Within 7 working days after completing all projects." },
+    { q: "Is the certificate valid globally?", a: "Yes, our certification is recognized by global tech firms." }
+  ],
+  'Support & Mentorship': [
+    { q: "Will I have a dedicated mentor?", a: "Yes, every student is assigned a personal industry mentor." },
+    { q: "How do I resolve my doubts?", a: "We have 24/7 doubt support via our community Discord." },
+    { q: "Can I talk to alumni?", a: "Yes, we host monthly 'Alumni Connect' sessions." },
+    { q: "What if I miss a live class?", a: "You can watch the recording and ask doubts in the next session." },
+    { q: "Is there a community group?", a: "Yes, you will join a batch-specific community for networking." }
+  ]
+};
 
   const companies = [
     "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
@@ -150,9 +270,9 @@ function App() {
   ];
 
   const studentData1 = [
-    { n: "Sonal", p: "https://i.pravatar.cc/150?u=11", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
-    { n: "Abhishek", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+  { n: "Sonal", p: "https://i.pravatar.cc/150?u=11", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+  { n: "Abhishek", p: "https://i.pravatar.cc/150?u=12", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+  { n: "Nabajyoti", p: "https://i.pravatar.cc/150?u=13", c: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
   { n: "Anita", p: "https://i.pravatar.cc/150?u=17", c: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" },
   { n: "Karan", p: "https://i.pravatar.cc/150?u=18", c: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
   { n: "Deepa", p: "https://i.pravatar.cc/150?u=19", c: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
@@ -223,13 +343,15 @@ function App() {
         )}
 
         {view === 'jobs' && (
-          <div style={{ position: 'relative', width: '100%', height: '700px', overflow: 'hidden', textAlign: 'center' }}>
-            <SectionHeader>Floating Objects Job Portal</SectionHeader>
+          <div
+          key="job-portal" 
+          style={{ position: 'relative', width: '100%', height: '700px', overflow: 'hidden', textAlign: 'center' }}>
+            <SectionHeader>Every 3rd software engineer in india is on HireNext</SectionHeader>
             {[
   { n: "Uber", s: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png", t: "5%", r: "18s", d: "-2s", sz: "150px" },
   { n: "PhonePe", s: "https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png", t: "12%", r: "24s", d: "-15s", sz: "100px" },
   { n: "Google", s: "https://pngimg.com/uploads/google/google_PNG19644.png", t: "19%", r: "28s", d: "-5s", sz: "120px" },
-  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "26%", r: "16s", d: "-10s", sz: "70px" },
+  { n: "Flipkart", s: "https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png", t: "26%", r: "16s", d: "-10s", sz: "170px" },
   { n: "Amazon", s: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", t: "33%", r: "35s", d: "-7s", sz: "70px" },
   { n: "Microsoft", s: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", t: "40%", r: "30s", d: "-12s", sz: "130px" },
   { n: "Apple", s: "https://img.icons8.com/ios_filled/1200/mac-os.png", t: "47%", r: "26s", d: "-20s", sz: "90px" },
@@ -240,13 +362,19 @@ function App() {
   { n: "hp", s: "https://download.logo.wine/logo/Hewlett-Packard/Hewlett-Packard-Logo.wine.png", t: "82%", r: "22s", d: "-14s", sz: "90px" },
   { n: "Nokia", s: "https://logos-world.net/wp-content/uploads/2020/09/Nokia-Symbol.jpg", t: "89%", r: "19s", d: "-10s", sz: "30px" },
   { n: "Intel", s: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Intel_logo_%282006-2020%29.svg/1200px-Intel_logo_%282006-2020%29.svg.png?20200807225939", t: "96%", r: "24s", d: "-19s", sz: "70px" },
-  { n: "IBM", s: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg", t: "2%", r: "32s", d: "-22s", sz: "200px" },
-  { n: "Twitter", s: "https://img.freepik.com/premium-vector/round-twitter-logo-isolated-white-background_469489-899.jpg?semt=ais_hybrid&w=740&q=80", t: "15%", r: "27s", d: "-6s", sz: "150px" },
-  { n: "LinkedIn", s: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png", t: "28%", r: "38s", d: "-16s", sz: "80px" },
-  { n: "Adobe", s: "https://1000logos.net/wp-content/uploads/2021/04/Adobe-logo.png", t: "41%", r: "29s", d: "-9s", sz: "120px" },
-  { n: "Samsung", s: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_8rNzfm30Z3wteJhxxlQPOFMkaHtOLvQhuw&s", t: "54%", r: "34s", d: "-4s", sz: "100px" }
+
 ].map((logo, i) => (
-              <FloatingLogo key={i} top={logo.t} rollDuration={logo.r} size={logo.sz}><img src={logo.s} alt={logo.n} /><div className="name-label">{logo.n}</div></FloatingLogo>
+                <FloatingLogo
+    key={logo.n}
+    index={i}
+    top={logo.t}
+    size={logo.sz}
+    rollDuration={logo.r}
+    delay={`${i * 1.8}s`}   // POSITIVE stagger
+  >
+    <img src={logo.s} alt={logo.n} />
+    <div className="name-label">{logo.n}</div>
+  </FloatingLogo>
             ))}
           </div>
         )}
@@ -261,22 +389,31 @@ function App() {
             </MarqueeWrapper>
 
             <SectionHeader>Our learners got placed. So can you!</SectionHeader>
-            <StudentSectionWrapper>
-              <MarqueeWrapper>
-                <MarqueeTrack speed="40s">
-                  {[...studentData1, ...studentData1].map((s, i) => (
-                    <LearnerCard key={`row1-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" alt="logo" /></LearnerCard>
-                  ))}
-                </MarqueeTrack>
-              </MarqueeWrapper>
-              <MarqueeWrapper style={{marginTop:'50px'}}>
-                <MarqueeTrack reverse speed="45s">
-                  {[...studentData2, ...studentData2].map((s, i) => (
-                    <LearnerCard key={`row2-${i}`}><img src={s.p} className="profile" alt={s.n} /><div className="name">{s.n}</div><img src={s.c} className="placed-logo" alt="logo" /></LearnerCard>
-                  ))}
-                </MarqueeTrack>
-              </MarqueeWrapper>
-            </StudentSectionWrapper>
+           <StudentSectionWrapper>
+  <NoFadeMarqueeWrapper>
+    <MarqueeTrack speed="40s">
+      {[...studentData1, ...studentData1].map((s, i) => (
+        <LearnerCard key={`row1-${i}`}>
+          <img src={s.p} className="profile" alt={s.n} />
+          <div className="name">{s.n}</div>
+          <img src={s.c} className="placed-logo" alt="logo" />
+        </LearnerCard>
+      ))}
+    </MarqueeTrack>
+  </NoFadeMarqueeWrapper>
+
+  <NoFadeMarqueeWrapper style={{ marginTop: '50px' }}>
+    <MarqueeTrack reverse speed="45s">
+      {[...studentData2, ...studentData2].map((s, i) => (
+        <LearnerCard key={`row2-${i}`}>
+          <img src={s.p} className="profile" alt={s.n} />
+          <div className="name">{s.n}</div>
+          <img src={s.c} className="placed-logo" alt="logo" />
+        </LearnerCard>
+      ))}
+    </MarqueeTrack>
+  </NoFadeMarqueeWrapper>
+</StudentSectionWrapper>
 
             <ContentWrapper style={{marginTop: '80px'}}>
               <SectionHeader>Other in-demand trainings</SectionHeader>
@@ -291,8 +428,14 @@ function App() {
               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: '25px'}}>
                 <h2 style={{fontSize: '32px', fontWeight: 800}}>FAQ's</h2>
                 <div style={{display:'flex', gap:'12px'}}>
-                  <button onClick={() => navigateFAQ('prev')} style={{width:'40px', height:'40px', borderRadius:'50%', border:'1px solid #eee', background:'white', cursor:'pointer'}}><ChevronLeft size={20} /></button>
-                  <button onClick={() => navigateFAQ('next')} style={{width:'40px', height:'40px', borderRadius:'50%', border:'1px solid #eee', background:'white', cursor:'pointer'}}><ChevronRight size={20} /></button>
+                  <FAQNavButton onClick={() => navigateFAQ('prev')}>
+  <ChevronLeft size={20} />
+</FAQNavButton>
+
+<FAQNavButton onClick={() => navigateFAQ('next')}>
+  <ChevronRight size={20} />
+</FAQNavButton>
+
                 </div>
               </div>
               <FAQTabList>{Object.keys(faqData).map(tab => (<TabItem key={tab} active={activeFAQTab === tab} onClick={() => {setActiveFAQTab(tab); setOpenFAQ(null)}}>{tab}</TabItem>))}</FAQTabList>
